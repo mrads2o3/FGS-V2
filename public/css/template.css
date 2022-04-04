@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+  font-weight: 400;
+}
+
+.overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body {
+  background-color: rgb(41, 38, 70);
+  font-family: Inter-SemiBold, sans-serif;
+}
+
+.bg-fastgaming {
+  background-color: rgb(41, 38, 70) !important;
+}
+
+.bg-sec-fastgaming {
+  background-color: rgb(63, 79, 145) !important;
+}
+
+.bg-3rd-fastgaming {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+.text-fastgaming {
+  color: rgb(41, 38, 70) !important;
+}
+
+.text-white {
+  color: rgb(255, 255, 255);
+}
+
+.text-black {
+  color: rgb(0, 0, 0);
+}
+
+.last-tx_box {
+  border: solid rgb(63, 79, 145) 3px;
+}
+
+.img-fluid:hover::before {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px #ffffff;
+}
+
+.img-fluid:hover {
+  color: #ffffff;
+  box-shadow: 0 0 15px #ffffff;
+  text-shadow: 0 0 15px #ffffff;
+}
+
+.img-logo {
+  margin-right: 2px;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+@media (min-width: 992px) {
+  .col-lg-25 {
+    flex: 0 0 auto;
+    width: 20%;
+  }
+
+  span {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  span {
+    font-size: 10px;
+  }
+}
+
+.img-profile {
+  width: 200px;
+  height: 200px;
+  background: #dac52c;
+  border-radius: 100%;
+}
+
+/* .accordion-item { 
+    color: black;
+}*/

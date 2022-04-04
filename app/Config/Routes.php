@@ -31,7 +31,21 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
+// Nothing
 $routes->get('/', 'Home::index');
+
+// Admin filter
+$routes->get('/admin', 'Admin::index', ['filter' => 'role:admin']);
+$routes->get('/admin/index', 'Admin::index', ['filter' => 'role:admin']);
+
+// User filter
+$routes->get('/member', 'Member::index', ['filter' => 'role:user']);
+$routes->get('/member/index', 'Member::index', ['filter' => 'role:user']);
+
+// Public
+$routes->get('/games/(:any)', 'Home::games_paket/$1');
+
 
 /*
  * --------------------------------------------------------------------
