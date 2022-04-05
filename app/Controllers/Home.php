@@ -1,25 +1,36 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Models\DaftarGameModel;
 use App\Models\DaftarPaketModel;
+use App\Models\UserAccessModel;
 
 class Home extends BaseController
 {
     protected $games;
     protected $paket;
+    protected $uaccess;
 
     public function __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
         $this->games = new DaftarGameModel();
         $this->paket = new DaftarPaketModel();
+        $this->uaccess = new UserAccessModel();
+        $this->auth = service('authentication');
     }
 
     public function index()
     {
+        $popupler = '';
+        
+        $user_id = $this->getUserID();
         $data = [
             'games' => $this->games->getGames(),
+            'uaccess' => $this->uaccess->getAccess($user_id),
+            'paccess' => $this->uaccess->getAccess(),
+            'newgames' => $this->games->where(['status'=>'enabled'])->orderBy('created_at', 'DESC')->findAll(),
         ];
         return view('public_view/index', $data);
     }

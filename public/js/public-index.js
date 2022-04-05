@@ -76,11 +76,11 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
 
   // Gatau bentar
   var req = new XMLHttpRequest();
-  req.onreadystatechange = function(){
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("demo").innerHTML = this.responseText;
-    }
-  }
+  // req.onreadystatechange = function(){
+  //   if (this.readyState == 4 && this.status == 200) {
+  //     document.getElementById("demo").innerHTML = this.responseText;
+  //   }
+  // }
   req.open('POST', 'http://localhost:8080/api/recordAct');
   req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
   req.send('game_id='+game_id+'&paket_id='+paket_id);

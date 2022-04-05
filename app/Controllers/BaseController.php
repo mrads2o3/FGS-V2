@@ -49,4 +49,39 @@ class BaseController extends Controller
 
         // E.g.: $this->session = \Config\Services::session();
     }
+
+    public function getUserID(){
+        $this->auth = service('authentication');
+
+        if($this->auth->check()){
+            // $users = model(UserModel::class);
+            // d($this->auth->user()->username);
+            $id = $this->auth->user()->username;
+        }else{
+            // $_IP_SERVER = $_SERVER['SERVER_ADDR'];
+            $_IP_ADDRESS = $_SERVER['REMOTE_ADDR']; 
+            // if($_IP_ADDRESS == $_IP_SERVER)
+            // {
+            //     ob_start();
+            //     system('ipconfig /all');
+            //     $_PERINTAH  = ob_get_contents();
+            //     ob_clean();
+            //     $_PECAH = strpos($_PERINTAH, "Physical");
+            //     $_HASIL = substr($_PERINTAH,($_PECAH+36),17);
+            // }
+            // else {
+            $_PERINTAH = "arp -a $_IP_ADDRESS";
+            ob_start();
+            system($_PERINTAH);
+            $_HASIL = ob_get_contents();
+            ob_clean();
+            $_PECAH = strstr($_HASIL, $_IP_ADDRESS);
+            $_PECAH_STRING = explode($_IP_ADDRESS, str_replace(" ", "", $_PECAH));
+            $_HASIL = substr($_PECAH_STRING[0], 0, 17);
+            // }
+            $id = md5($_HASIL);
+            // $macaddr= preg_replace("/[^0-9]/", "", $random);
+        }
+        return $id;
+    }
 }
