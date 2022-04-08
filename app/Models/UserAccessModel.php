@@ -26,7 +26,7 @@ class UserAccessModel extends Model
         if($id_user != false){
             $result = $this->where(['id_user'=>$id_user])->orderBy('times', 'DESC')->findAll();
         }else{
-            $result = $this->orderBy('times', 'DESC')->findAll();
+            $result = $this->orderBy('game_id', 'DESC')->findAll();
         }
         return $result;
     }

@@ -16,6 +16,9 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
   modalTitle.textContent = 'Paket - ' + nama_game;
   //   modalBodyInput.value = recipient
 
+  x = document.getElementById('list_paket');
+  x.innerHTML = 'Loading...';
+  
   // Test API code
   // const app = document.getElementById('root');
 
@@ -31,7 +34,6 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
   var request = new XMLHttpRequest();
   request.open('GET', 'http://localhost:8080/api/getpaket?game_id='+game_id , true);
   request.onload = function () {
-    x = document.getElementById('list_paket');
     // Begin accessing JSON data here
     var result = JSON.parse(this.response);
     if (request.status >= 200 && request.status < 400) {
@@ -54,8 +56,6 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
       // resultdata = result.data;
 
       //change to loading 1st
-      x.innerHTML = 'Loading...';
-
       let text = "";
       result.data.forEach(a => {
         // alert(a.nama_paket);
