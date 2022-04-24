@@ -206,7 +206,14 @@ class Api extends ResourceController
                     }
                 }
 
-                echo $nickname;
+                //Jika benar semua pengecekan
+            ?>
+<div class="row">
+    <div class="col-12">
+        <?= $gameData['nama_game'].' - '.$paketData['nama_paket']; ?>
+    </div>
+</div>
+<?php
 
             }else{
                 return 'Anda siapa?';
