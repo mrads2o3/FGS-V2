@@ -1,7 +1,6 @@
 <div class="bg-3rd-fastgaming my-2 py-2">
-    <!-- <button onclick="contoh()">ini button</button> -->
     <div class="demo text-white" id="demo">
-        <!-- Test box -->
+
     </div>
 
     <!-- Untuk kamu -->
@@ -12,7 +11,7 @@
             <hr>
         </div>
         <div class="col-4">
-            <h4>UNTUK KAMU</h4>
+            <h4>UNTUKMU</h4>
         </div>
         <div class="col-4">
             <hr>
@@ -48,9 +47,10 @@
                 $count++;
             }
         } ?>
-        <?php 
-    } ?>
     </div>
+    <?php 
+    } ?>
+
     <!-- End untuk kamu -->
     <!-- Populer -->
     <?php 
@@ -85,7 +85,6 @@
             foreach($games as $a){
                 if($a['slug'] ==  $b){
         ?>
-        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Open modal for @mdo</button> -->
         <a href="#" data-bs-toggle="modal" data-bs-target="#modalPaket" data-bs-whatever="<?= $a['slug']; ?>"
             data-bs-whatever2="<?= $a['nama_game']; ?>" class="col-lg-2 col-sm-3 col-4 my-1 mb-2 text-none p-1"
             style="text-decoration:none;">
@@ -130,7 +129,6 @@
         <?php 
         $count = 1;
         foreach($newgames as $a) : ?>
-        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Open modal for @mdo</button> -->
         <a href="#" data-bs-toggle="modal" data-bs-target="#modalPaket" data-bs-whatever="<?= $a['slug']; ?>"
             data-bs-whatever2="<?= $a['nama_game']; ?>" class="col-lg-2 col-sm-3 col-4 my-1 mb-2 text-none p-1"
             style="text-decoration:none;">

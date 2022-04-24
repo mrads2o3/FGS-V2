@@ -13,13 +13,18 @@ class DaftarPaketModel extends Model
     'banner_paket', 'game-id', 'game-id_placeholder', 'game-id_type', 'game-server', 'game-server_placeholder', 'game-serverr_type', 
     'game-server_select-value', 'note', 'note_placeholder', 'game-nickname', 'game-nickname_placeholder', 'petunjuk', 'status', 'sub1', 'sub2', 'sub3'];
     
-    public function getPaket($slug_game=false)
+    public function getPaket($slug_game=false, $paket_id=false)
     {
-        if($slug_game == false){
+        
+        if($slug_game=false && $paket_id=false){
             return $this->where(['status' => 'enabled'])->orderBy('urutan', 'ASC')->findAll();
+        }else if($slug_game!=false && $paket_id!=false){
+            return $this->where(['slug_game'=>$slug_game, 'kode_paket'=>$paket_id ,'status'=>'enabled'])->findAll();
+        }else if($slug_game!=false){
+            return $this->where(['slug_game'=>$slug_game,'status'=>'enabled'])->findAll();
+        }else if($paket_id!=false){
+            return $this->where(['kode_paket'=>$paket_id,'status'=>'enabled'])->findAll();
         }
-
-        return $this->where(['slug_game'=>$slug_game])->findAll();
     }
 }
 

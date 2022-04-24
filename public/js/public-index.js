@@ -17,7 +17,9 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
   //   modalBodyInput.value = recipient
 
   x = document.getElementById('list_paket');
-  x.innerHTML = 'Loading...';
+
+  //change to loading 1st
+  x.innerHTML = '<center><img src="assets/core/image/loading.gif" alt="" style="width:auto;height:100px;"></center>';
   
   // Test API code
   // const app = document.getElementById('root');
@@ -55,11 +57,10 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
       // alert(result.data[0].nama_paket);
       // resultdata = result.data;
 
-      //change to loading 1st
       let text = "";
       result.data.forEach(a => {
         // alert(a.nama_paket);
-        text += '<a href="#" class="col-lg-3 col-4 my-1 mb-2 text-none p-1" style="text-decoration:none;"><div class="row"><div class="col-lg-10 col-12 m-auto d-block"><img src="/assets/uploaded/image/icon/'+a.ikon_paket+'" class="img-fluid img-logo"></div><div class="col-lg-10 col-12 text-center m-auto mt-2 d-block"><span class="text-black fw-bold">'+a.nama_paket+'</span></div></div>';
+        text += '<a href="http://localhost:8080/paket/'+game_id+'/'+a.kode_paket+'" class="col-lg-3 col-4 my-1 mb-2 text-none p-1" style="text-decoration:none;"><div class="row"><div class="col-lg-10 col-12 m-auto d-block"><img src="/assets/uploaded/image/icon/'+a.ikon_paket+'" class="img-fluid img-logo"></div><div class="col-lg-10 col-12 text-center m-auto mt-2 d-block"><span class="text-black fw-bold">'+a.nama_paket+'</span></div></div>';
       });
 
       //then change to result from api

@@ -8,6 +8,10 @@
   text-overflow: ellipsis;
 }
 
+a{
+  text-decoration: none;
+}
+
 body {
   background-color: rgb(41, 38, 70);
   font-family: Inter-SemiBold, sans-serif;
@@ -90,3 +94,40 @@ body {
 /* .accordion-item { 
     color: black;
 }*/
+
+.accordion-menu:first-of-typ {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.accordion-menu {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, .125);
+}
+
+.accordion-menu-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  background-color: #fff;
+  border: 0;
+  border-radius: 0;
+  overflow-anchor: none;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out, border-radius .15s ease;
+}
+
+.number{
+  text-align: center;
+  background: rgb(63, 79, 145) !important;
+  border-radius: 100%;
+  width: 45px;
+  height: 45px;
+  float: left;
+  padding: 8px 5px 5px 5px;
+  margin-top: -45px;
+}

@@ -10,26 +10,6 @@
 
         <!-- 3 Strip -->
         <div class="d-flex">
-            <?php if(!logged_in()){ ?>
-            <a href="<?= base_url('/login'); ?>" class="btn btn-light mx-3" style="float:right;">Login</a>
-            <?php }else{ ?>
-
-            <div class="btn-group">
-                <img src="<?= base_url('/assets/uploaded/image/profileimg/'.user()->user_image); ?>" type="button"
-                    class="mx-3 dropdown-toggle" width="40px" height="40px"
-                    style="border-radius:100%;border:solid cyan 3px;" data-bs-toggle="dropdown">
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item disabled">Hi, <?= user()->username; ?></a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="fas fa-history"></i> History</a></li>
-                    <li><a href="<?= base_url('logout'); ?>" class="dropdown-item" href="#"><i
-                                class="fas fa-sign-out-alt"></i> Logout</a></li>
-                </ul>
-            </div>
-            <?php } ?>
             <button class="navbar-toggler bg-3rd-fastgaming" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon"></span>
@@ -40,28 +20,98 @@
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 
             <!-- Offcanvas header -->
-            <div class="offcanvas-header bg-dark">
-                <h3 class="offcanvas-title" id="offcanvasNavbarLabel">
-                    <img src="<?= base_url('img/core/fg.png'); ?>" alt="" width="auto" height="40"
-                        class="d-inline-block">
-                    <!--Fast Gaming Store-->
-                </h3>
-                <button type="button" class="btn-close btn-close-white" style="background-color:white;"
+            <!-- <div class="offcanvas-header bg-dark"> -->
+            <div class="container">
+                <button type="button" class="btn-close btn-close-white m-2" style="background-color:white;float:right;"
                     data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <div class="my-2">
+                    <?php if(!logged_in()){ ?>
+
+                    <div class="mb-2">
+                        Anda belum login, silahkan
+                    </div>
+                    <div class="text-center">
+                        <a href="<?= base_url('/login'); ?>" class="btn bg-fastgaming text-white">Login</a>
+                        atau
+                        <a href="<?= base_url('/register'); ?>" class="btn bg-sec-fastgaming text-white">Daftar</a>
+                    </div>
+
+                    <?php }else{ ?>
+                    <div class="row">
+                        <div class="col-4">
+                            <img src="<?= base_url('/assets/uploaded/image/profileimg/'.user()->user_image); ?>"
+                                type="button" class="mx-3 dropdown-toggle" width="80px" height="80px"
+                                style="border-radius:100%;border:solid cyan 3px;" data-bs-toggle="dropdown">
+                        </div>
+                        <div class="col-8">
+                            Hallo, <b><?= user()->username; ?></b>
+                        </div>
+                    </div>
+
+                    <?php } ?>
+                </div>
             </div>
+
+            <!-- </div> -->
 
             <!-- Offcanvas body -->
             <div class="offcanvas-body bg-light p-0 ">
 
                 <!-- Accordion -->
                 <div class="accordion" id="accordionExample">
+                    <?php 
+                        if(logged_in()){
+                    ?>
+                    <!-- Menu jika sudah login  -->
+                    <div class="accordion-menu">
+                        <h2 class="accordion-header" id="headingOne">
+                            <a href="#">
+                                <button class="accordion-menu-button collapsed px-3" type="button">
+                                    <i class="fas fa-address-card mx-3"></i> Profile
+                                </button>
+                            </a>
+                        </h2>
+                    </div>
 
+                    <div class="accordion-menu">
+                        <h2 class="accordion-header" id="headingOne">
+                            <a href="#">
+                                <button class="accordion-menu-button collapsed px-3" type="button">
+                                    <i class="fas fa-shopping-cart mx-3"></i> Keranjang
+                                </button>
+                            </a>
+                        </h2>
+                    </div>
+
+                    <div class="accordion-menu">
+                        <h2 class="accordion-header" id="headingOne">
+                            <a href="#">
+                                <button class="accordion-menu-button collapsed px-3" type="button">
+                                    <i class="fas fa-history mx-3"></i> History Transaksi
+                                </button>
+                            </a>
+                        </h2>
+                    </div>
+
+                    <div class="accordion-menu">
+                        <h2 class="accordion-header" id="headingOne">
+                            <a href="<?= base_url('/logout'); ?>">
+                                <button class="accordion-menu-button collapsed px-3" type="button">
+                                    <i class="fas fa-sign-out-alt mx-3"></i> Logout
+                                </button>
+                            </a>
+                        </h2>
+                    </div>
+                    <!-- End menu -->
+                    <?php 
+                        }
+                    ?>
                     <!-- Kalkulator magic wheel -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            <button class="accordion-button collapsed px-1" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Kalkulator Magic Wheel
+                                <i class="fas fa-calculator mx-3"></i> Kalkulator Magic Wheel
                             </button>
                         </h2>
 
@@ -99,9 +149,9 @@
                     <!-- Kalkulator skin zodiac -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            <button class="accordion-button collapsed px-1" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Kalkulator Skin Zodiac
+                                <i class="fas fa-calculator mx-3"></i> Kalkulator Skin Zodiac
                             </button>
                         </h2>
 
@@ -132,9 +182,9 @@
                     <!-- Kalkulator WR -->
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            <button class="accordion-button collapsed px-1" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Kalkulator Win Rate
+                                <i class="fas fa-calculator mx-3"></i> Kalkulator Win Rate
                             </button>
                         </h2>
 

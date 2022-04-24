@@ -10,15 +10,12 @@
     <div class="col-lg-8 col-xs-8 mx-auto d-block my-3">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-                <div class="carousel-item active" data-bs-interval="5000">
-                    <img src="<?= base_url('/img/core/contoh-banner.jpg'); ?>" class="d-block w-100" alt="...">
+                <?php $count=0; foreach($banner as $a){?>
+                <div class="carousel-item <?php if($count==0){echo 'active';}?>" data-bs-interval="5000">
+                    <img src="<?= base_url('/assets/uploaded/image/banner/'.$a['nama_files']); ?>" class="d-block w-100"
+                        alt="...">
                 </div>
-                <div class="carousel-item" data-bs-interval="5000">
-                    <img src="<?= base_url('/img/core/contoh-banner.jpg'); ?>" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item" data-bs-interval="5000">
-                    <img src="<?= base_url('/img/core/contoh-banner.jpg'); ?>" class="d-block w-100" alt="...">
-                </div>
+                <?php $count++;} ?>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
                 data-bs-slide="prev">

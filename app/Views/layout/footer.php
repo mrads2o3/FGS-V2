@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="col-12 text-center text-white p-3" style="background-color:rgba(0, 0, 0, 0.2);">
-            &copy 2022 | Fast Gaming Store | Creator : Ari Dwi Saputra
+            &copy 2022 | Fast Gaming Store
         </div>
     </div>
 </div>

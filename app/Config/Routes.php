@@ -44,7 +44,7 @@ $routes->get('/member', 'Member::index', ['filter' => 'role:user']);
 $routes->get('/member/index', 'Member::index', ['filter' => 'role:user']);
 
 // Public
-$routes->get('/games/(:any)', 'Home::games_paket/$1');
+$routes->get('/paket/(:any)/(:any)', 'Home::games_paket/$1/$2');
 
 
 /*
