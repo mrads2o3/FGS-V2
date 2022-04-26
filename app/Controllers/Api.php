@@ -7,6 +7,8 @@ use App\Models\DaftarPaketModel;
 use App\Models\DaftarGameModel;
 use App\Models\UserAccessModel;
 use App\Models\PromoCodeModel;
+use App\Models\DaftarHargaModel;
+use App\Models\DaftarPembayaranModel;
 
 class Api extends ResourceController
 {
@@ -14,6 +16,7 @@ class Api extends ResourceController
 
     protected $sendTo;
     protected $promo;
+    protected $paketApiModel;
 
     use ResponseTrait;
 
@@ -24,6 +27,8 @@ class Api extends ResourceController
         $this->promo = new PromoCodeModel();
         $this->paketApiModel = new DaftarPaketModel();
         $this->gameApiModel = new DaftarGameModel();
+        $this->harga = new DaftarHargaModel();
+        $this->pembayaran = new DaftarPembayaranModel();
         $this->auth = service('authentication');
     }
 
@@ -60,33 +65,8 @@ class Api extends ResourceController
 
     public function recordAct(){
         if($this->auth->check()){
-            // $users = model(UserModel::class);
-            // d($this->auth->user()->username);
             $id = $this->auth->user()->username;
         }else{
-            // $_IP_SERVER = $_SERVER['SERVER_ADDR'];
-            // $_IP_ADDRESS = $_SERVER['REMOTE_ADDR']; 
-            // if($_IP_ADDRESS == $_IP_SERVER)
-            // {
-            //     ob_start();
-            //     system('ipconfig /all');
-            //     $_PERINTAH  = ob_get_contents();
-            //     ob_clean();
-            //     $_PECAH = strpos($_PERINTAH, "Physical");
-            //     $_HASIL = substr($_PERINTAH,($_PECAH+36),17);
-            // }
-            // else {
-            // $_PERINTAH = "arp -a $_IP_ADDRESS";
-            // ob_start();
-            // system($_PERINTAH);
-            // $_HASIL = ob_get_contents();
-            // ob_clean();
-            // $_PECAH = strstr($_HASIL, $_IP_ADDRESS);
-            // $_PECAH_STRING = explode($_IP_ADDRESS, str_replace(" ", "", $_PECAH));
-            // $_HASIL = substr($_PECAH_STRING[0], 0, 17);
-            // // }
-            // $id = md5($_HASIL);
-            // $macaddr= preg_replace("/[^0-9]/", "", $random);
             $ipaddress = '';
             if (getenv('HTTP_CLIENT_IP'))
                 $ipaddress = getenv('HTTP_CLIENT_IP');
@@ -148,8 +128,6 @@ class Api extends ResourceController
     public function verifyorder()
     {
         $this->auth = service('authentication');
-        d($_POST);
-        if($this->auth->check()){
 
             if(isset($_POST)){
                 
@@ -172,6 +150,7 @@ class Api extends ResourceController
                 $paketData = $this->paketApiModel->getPaket(false, $_POST['paket_id']);
                 $gameData = $this->gameApiModel->getGames($paketData[0]['slug_game']);
                 
+                // Penentuan Nickname
                 if($paketData[0]['game-nickname'] == 'manual'){
                     $nickname = $_POST['nickname'];
                 }else{
@@ -206,22 +185,137 @@ class Api extends ResourceController
                     }
                 }
 
+                // Penentuan Harga
+                $harga = $this->harga->getHarga($_POST['paket_id'], $_POST['nominal']);
+
+                if($_POST['promocode'] !== ''){
+                    $promo = $this->promo->getPromo($_POST['promocode']);
+                }else{
+                    $promo = false;
+                }
+
+                if($harga){
+                    
+                    $randomHarga = rand(1, 100);
+                    $hargaBasic = $harga[0]['harga_basic'];
+
+                    $pembayaran = $this->pembayaran->getPembayaran($_POST['pembayaran']);
+                    $feePembayaran = $pembayaran[0]['fee'];
+                    
+                    if($feePembayaran == 0){
+                        $hargaTotal = $hargaBasic + $randomHarga;
+                    }else if($feePembayaran > 1){
+                        $hargaTotal = $hargaBasic + $feePembayaran + $randomHarga;
+                    }else if($feePembayaran < 1){
+                        $hargaTotal = $hargaBasic + ($hargaBasic * $feePembayaran) + $randomHarga;
+                    }
+
+                    $hargaTotalView = 'Rp '.str_replace(',', '.', number_format($hargaTotal));
+                    
+                }else{
+                    return '
+                    <div class="alert alert-danger text-center" role="alert">
+                        <b>Harga Error!</b>
+                    </div>';
+                }
+                
                 //Jika benar semua pengecekan
-            ?>
-<div class="row">
-    <div class="col-12">
-        <?= $gameData['nama_game'].' - '.$paketData['nama_paket']; ?>
-    </div>
-</div>
-<?php
+                echo '
+                <div class="row m-3">
+                    <div class="col-12 text-center">
+                        <h4>'.$gameData[0]['nama_game'].' - '.$paketData[0]['nama_paket'].'</h4>
+                        <hr>
+                    </div>
+                </div>
+                ';
+
+
+                if(isset($_POST['server'])){
+                    $user_id = $_POST['user_id'].' ('.$_POST['server'].')';
+                }else{
+                    $user_id = $_POST['user_id'];
+                }
+                
+                echo '
+                <div class="row m-3">
+                    <div class="col-5">
+                        User ID
+                    </div>
+                    <div class="col-7">
+                        : '.$user_id.'
+                    </div>
+                </div>
+                ';
+
+                if(isset($nickname)){
+                    echo '
+                    <div class="row m-3">
+                        <div class="col-5">
+                            Nickname
+                        </div>
+                        <div class="col-7">
+                            : '.$nickname.'
+                        </div>
+                    </div>
+                    ';
+                }
+
+                if($harga){
+                    echo '
+                    <div class="row m-3">
+                        <div class="col-5">
+                            Nominal
+                        </div>
+                        <div class="col-7">
+                            : '.$harga[0]['nominal'].'
+                        </div>
+                    </div>
+                    ';
+                }
+
+                if($pembayaran){
+                    echo '
+                    <div class="row m-3">
+                        <div class="col-5">
+                            Bayar Via 
+                        </div>
+                        <div class="col-7">
+                            : '.strtoupper($pembayaran[0]['nama_pembayaran']).'
+                        </div>
+                    </div>
+                    ';
+                }
+
+                if($promo){
+                    echo '
+                    <div class="row m-3">
+                        <div class="col-5">
+                            Promo Code
+                        </div>
+                        <div class="col-7">
+                            : '.$_POST['promocode'].'
+                        </div>
+                    </div>
+                    ';
+                }
+
+                if($hargaTotalView){
+                    echo '
+                    <div class="row m-3">
+                        <div class="col-5">
+                            Total 
+                        </div>
+                        <div class="col-7">
+                            : '.$hargaTotalView.'
+                        </div>
+                    </div>
+                    ';
+                }
 
             }else{
                 return 'Anda siapa?';
             }
             
-        }else{
-            return 'Anda Siapa ? ';
-        }
     }
 
 }

@@ -23,7 +23,6 @@
             foreach($games as $a){
                 if($a['slug'] ==  $b['game_id']){
         ?>
-        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Open modal for @mdo</button> -->
         <a href="#" data-bs-toggle="modal" data-bs-target="#modalPaket" data-bs-whatever="<?= $a['slug']; ?>"
             data-bs-whatever2="<?= $a['nama_game']; ?>" class="col-lg-2 col-sm-3 col-4 my-1 mb-2 text-none p-1"
             style="text-decoration:none;">
@@ -166,7 +165,6 @@
     </div>
     <div class="row text-white m-auto">
         <?php foreach($games as $a) : ?>
-        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Open modal for @mdo</button> -->
         <a href="#" data-bs-toggle="modal" data-bs-target="#modalPaket" data-bs-whatever="<?= $a['slug']; ?>"
             data-bs-whatever2="<?= $a['nama_game']; ?>" class="col-lg-2 col-sm-3 col-4 my-1 mb-2 text-none p-1"
             style="text-decoration:none;">

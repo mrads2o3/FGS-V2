@@ -6,14 +6,6 @@
 </div>
 
 <div class="row text-white">
-    <?php if(!logged_in()){ ?>
-    <div class="col-12 mb-2">
-        <div class="alert alert-danger text-center" role="alert">
-            Untuk melakukan transaksi, silahkan <a href="<?= base_url('/login'); ?>"> Login </a> atau <a
-                href="<?= base_url('/register'); ?>"> Daftar </a> terlebih dahulu.
-        </div>
-    </div>
-    <?php } ?>
     <div class="col-lg-5 col-12">
         <div class="card bg-3rd-fastgaming mb-5" style="border-radius:0px 110px 0px 0px;">
             <div class="card-body bg-sec-fastgaming p-0" style="border-radius: 0px 110px 0px 110px;">
@@ -178,7 +170,7 @@
                 ?>
                 <div class="col-<?=$a['ukuran']?> col-lg-6 mb-2 p-1">
                     <input class="btn-check" type="radio" name="nominal"
-                        id="harga-<?= $a['nominal'].'-'.$a['harga_basic']; ?>" value="<?= $a['nominal']; ?>"
+                        id="harga-<?= $a['nominal'].'-'.$a['harga_basic']; ?>" value="<?= $a['kode_harga']; ?>"
                         required="">
                     <label class="btn btn-outline-primary w-100"
                         for="harga-<?= $a['nominal'].'-'.$a['harga_basic']; ?>">
@@ -226,15 +218,14 @@
                 foreach($pembayaran as $a){
                 ?>
                 <div class="col-12 col-md-6 mb-2 px-1">
-                    <input class="btn-check" type="radio" name="pembayaran"
-                        id="bayar-pakai-<?= $a['nama_pembayaran']; ?>" value="<?= $a['nama_pembayaran']; ?>"
-                        disabled="true" required>
-                    <label class="btn btn-outline-primary w-100" for="bayar-pakai-<?= $a['nama_pembayaran']; ?>">
+                    <input class="btn-check" type="radio" name="pembayaran" id="bayar-pakai-<?= $a['id']; ?>"
+                        value="<?= $a['id']; ?>" disabled="true" required>
+                    <label class="btn btn-outline-primary w-100" for="bayar-pakai-<?= $a['id']; ?>">
                         <div class="d-flex">
                             <div class="p-0"><img src="/assets/uploaded/image/pembayaran/<?= $a['ikon_pembayaran']; ?>"
                                     style="height: 40px;width:80px;"></div>
-                            <div class="ml-auto p-0 txt-black d-block m-auto"
-                                id="text-bayar-<?= $a['nama_pembayaran']; ?>">Rp. 0,-</div>
+                            <div class="ml-auto p-0 txt-black d-block m-auto" id="text-bayar-<?= $a['id']; ?>">Rp. 0,-
+                            </div>
                         </div>
                     </label>
                 </div>
@@ -249,9 +240,6 @@
                 </b>
             </div>
             <hr>
-            <?php 
-            if(logged_in()){
-            ?>
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="Promocode" aria-label="Promocode" id="promo"
                     aria-describedby="basic-addon1">
@@ -262,15 +250,6 @@
             <div class="textDetailKode" id="textDetailKode">
 
             </div>
-            <?php 
-            }else{
-                echo '        
-                <div class="alert alert-danger text-center" role="alert">
-                    Untuk melakukan transaksi, silahkan <a href="'.base_url('/login').'"> Login </a> atau <a
-                    href="'.base_url('/register').'"> Daftar </a> terlebih dahulu.
-                </div>';
-            }
-            ?>
         </div>
     </div>
 </div>
@@ -314,8 +293,8 @@ function changePrice(e) {
                 harga = parseInt(h_awal[2]) + (parseInt(h_awal[2]) * fee);
             }
 
-            selector = document.querySelector('#text-bayar-<?= $a['nama_pembayaran']; ?>');
-            document.querySelector("#bayar-pakai-<?=$a['nama_pembayaran']?>").disabled = false;
+            selector = document.querySelector('#text-bayar-<?= $a['id']; ?>');
+            document.querySelector("#bayar-pakai-<?=$a['id']?>").disabled = false;
             selector.innerText = harga.toLocaleString('id', {
                 style: 'currency',
                 currency: 'IDR'
@@ -333,28 +312,18 @@ echo 'document.getElementById("beli").onclick = function() {';
     foreach ($id_id as $a){
         if(!empty($a)){
             echo 'var '.$a.' = document.getElementById("'.$a.'").value;';
-            // echo 'alert('.$a.');';
         }
     }
 ?>
 
 $(document).ready(function() {
     var nominal = $("input[name='nominal']:checked").val();
-    // if (radioValue) {
-    //     alert("result: you choose " + radioValue);
-    // } else {
-    //     alert("belum pilih nominal");
-    // }
+
     var pembayaran = $("input[name='pembayaran']:checked").val();
-    // if (radioValues) {
-    //     alert("result: you choose " + radioValues);
-    // } else {
-    //     alert("belum pilih pembayaran");
-    // }
+
 });
 
 var promocode = document.getElementById("promo").value;
-// alert('promocode ' + promocode);
 <?php
 echo '}';
 ?>

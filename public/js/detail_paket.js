@@ -14,7 +14,11 @@ document.getElementById("promo").onchange = function() {
     xhr.onload = function() {
         if (this.status >= 200 && this.status < 400) {
             let list = document.getElementById("textDetailKode");
-            list.innerHTML = 'Loading...';
+            if(x.value !== ''){
+                list.innerHTML = 'Loading...';
+            }else{
+                list.innerHTML = '';
+            }
 
             // Changing string data into JSON Object
             obj = JSON.parse(this.responseText);
@@ -28,9 +32,9 @@ document.getElementById("promo").onchange = function() {
 
                 if(obj.data.paket == 53 || obj.data.paket == sliceText){
                     const timeNow = new Date();
-                    alert(timeNow);
+                    // alert(timeNow);
                     const expired = new Date(obj.data.expired);
-                    alert(expired);
+                    // alert(expired);
                     if(timeNow < expired){
                         if (obj.data.disc <= 1) {
                             diskon = (obj.data.disc * 100) + '%';
@@ -51,7 +55,6 @@ document.getElementById("promo").onchange = function() {
                     
                 }
             }
-            // console.log(obj);
         } else {
             list.innerHTML = 'Gagal Mengambil Data';
         }

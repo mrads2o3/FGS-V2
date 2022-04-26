@@ -11,13 +11,15 @@ class DaftarHargaModel extends Model
     protected $useTimestamps = false;
     protected $allowedFields = ['urutan', 'kode_paket', 'nominal', 'harga_basic', 'ukuran', 'template', 'c_matauang'];
     
-    public function getHarga($kode_paket=false)
+    public function getHarga($kode_paket=false, $kode_harga=false)
     {
-        if($kode_paket == false){
+        if($kode_paket !== false && $kode_harga !== false){
+            return $this->where(['kode_paket'=>$kode_paket, 'kode_harga'=>$kode_harga])->findAll();
+        }else if($kode_paket == false){
             return $this->orderBy('urutan', 'ASC')->findAll();
+        }else{
+            return $this->where(['kode_paket'=>$kode_paket])->findAll();
         }
-
-        return $this->where(['kode_paket'=>$kode_paket])->findAll();
     }
 }
 
