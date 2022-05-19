@@ -38,17 +38,12 @@
 
                     <?php }else{ ?>
                     <div class="row">
-                        <div class="col-4">
-                            <img src="<?= base_url('/assets/uploaded/image/profileimg/'.user()->user_image); ?>"
-                                type="button" class="mx-3 dropdown-toggle" width="80px" height="80px"
-                                style="border-radius:100%;border:solid cyan 3px;" data-bs-toggle="dropdown">
-                        </div>
-                        <div class="col-8">
-                            Hallo, <b><?= user()->username; ?></b>
+                        <div class="col my-4">
+                            Hallo, <b><?= user()->username.' ('.user()->getRoles()[1].')'; ?></b>
                         </div>
                     </div>
-
-                    <?php } ?>
+                    <?php
+                        } ?>
                 </div>
             </div>
 
@@ -61,31 +56,22 @@
                 <div class="accordion" id="accordionExample">
                     <?php 
                         if(logged_in()){
+                            if(user()->getRoles()[1] == 'admin'){
                     ?>
                     <!-- Menu jika sudah login  -->
                     <div class="accordion-menu">
                         <h2 class="accordion-header" id="headingOne">
-                            <a href="#">
+                            <a href="<?= base_url('/admin/panel_admin'); ?>">
                                 <button class="accordion-menu-button collapsed px-3" type="button">
-                                    <i class="fas fa-address-card mx-3"></i> Profile
+                                    <i class="fas fa-user-cog mx-3"></i> Panel Admin
                                 </button>
                             </a>
                         </h2>
                     </div>
-
+                    <?php } ?>
                     <div class="accordion-menu">
                         <h2 class="accordion-header" id="headingOne">
-                            <a href="#">
-                                <button class="accordion-menu-button collapsed px-3" type="button">
-                                    <i class="fas fa-shopping-cart mx-3"></i> Keranjang
-                                </button>
-                            </a>
-                        </h2>
-                    </div>
-
-                    <div class="accordion-menu">
-                        <h2 class="accordion-header" id="headingOne">
-                            <a href="#">
+                            <a href="<?= base_url('/member/transaction_history'); ?>">
                                 <button class="accordion-menu-button collapsed px-3" type="button">
                                     <i class="fas fa-history mx-3"></i> History Transaksi
                                 </button>

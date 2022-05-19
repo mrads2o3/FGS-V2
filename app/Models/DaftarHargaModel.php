@@ -15,6 +15,8 @@ class DaftarHargaModel extends Model
     {
         if($kode_paket !== false && $kode_harga !== false){
             return $this->where(['kode_paket'=>$kode_paket, 'kode_harga'=>$kode_harga])->findAll();
+        }elseif($kode_harga != false){
+            return $this->where(['kode_harga'=>$kode_harga])->findAll();
         }else if($kode_paket == false){
             return $this->orderBy('urutan', 'ASC')->findAll();
         }else{

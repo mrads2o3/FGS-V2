@@ -8,5 +8,10 @@ class Admin extends BaseController
     {
         echo 'ini halaman khusus <b> admin </b> ya gaes';
     }
+
+    public function panelAdmin()
+    {
+        return view('admin/index');
+    }
 }
 ?>

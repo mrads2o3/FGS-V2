@@ -13,7 +13,7 @@ class PromoCodeModel extends Model
     
     public function getPromo($code = false)
     {
-        if($code){
+        if($code != '' || $code != false){
             return $this->where(['code'=>$code])->findAll();
         }else{
             return $this->findAll();

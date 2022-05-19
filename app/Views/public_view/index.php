@@ -28,8 +28,19 @@
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
+
+        <form action="/order_id/" method="post">
+            <div class="input-group mt-3">
+                <input type="text" class="form-control text-center" name="search-order_id" placeholder="CARI ORDER ID"
+                    aria-label="Masukan Order ID" aria-describedby="button-addon">
+                <button class="btn btn-outline-info" type="submit" id="button-addon">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
+
 
 <div class="row">
     <?= $this->include('public_view/gamelist'); ?>
@@ -48,10 +59,6 @@
 
                 </div>
             </div>
-            <!-- <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
-            </div> -->
         </div>
     </div>
 </div>

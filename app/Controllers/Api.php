@@ -10,6 +10,8 @@ use App\Models\PromoCodeModel;
 use App\Models\DaftarHargaModel;
 use App\Models\DaftarPembayaranModel;
 
+use function PHPUnit\Framework\isEmpty;
+
 class Api extends ResourceController
 {
     protected $helpers = ['auth'];
@@ -127,22 +129,33 @@ class Api extends ResourceController
     
     public function verifyorder()
     {
-        $this->auth = service('authentication');
+        function is_email_valid($email) {
+            if (preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/", trim($email))){
+                return TRUE;
+            }
+            return FALSE;
+        }
 
+        if(!empty($_POST['email'])){
+            if(!is_email_valid($_POST['email'])){
+                return '
+                <div class="alert alert-danger text-center" role="alert">
+                    <b>Masukan email yang benar atau kosongkan saja.</b>
+                </div>';
+            }
+        }
+
+        $this->auth = service('authentication');
             if(isset($_POST)){
-                
                 // Cek input atau post
-                $post = count($_POST);
-                foreach($_POST as $a){
-                    if($a=='' || empty($a) || $a== NULL || $a == 'undefined'){
-                        return '
-                        <div class="alert alert-danger text-center" role="alert">
-                            <b>Semua Field Wajib Diisi</b>
-                        </div>';
-                    }
-                    $post--;
-                    if($post == 1){
-                        break;
+                foreach($_POST as $a=>$b){
+                    if($a != 'promocode' && $a != 'email'){
+                        if($b=='' || empty($b) || $b== NULL || $b == 'undefined'){
+                            return '
+                            <div class="alert alert-danger text-center" role="alert">
+                                <b>Semua Field Wajib Diisi</b>
+                            </div>';
+                        }
                     }
                 }
                 // End Cek
@@ -153,64 +166,119 @@ class Api extends ResourceController
                 // Penentuan Nickname
                 if($paketData[0]['game-nickname'] == 'manual'){
                     $nickname = $_POST['nickname'];
-                }else{
+                }else if($paketData[0]['game-nickname'] == 'auto'){
                     if($paketData[0]['slug_game'] == 'mobile_legends' || $paketData[0]['slug_game'] == 'free_fire'){
-                        $nickname = 'Oke';
-                        $id = $_POST['user_id'];
-                        $ch = curl_init();
-                        if(isset($_POST['server'])){
-                            $zone = $_POST['server'];
-                            curl_setopt($ch, CURLOPT_URL, "https://api-xyz.com/trueid/mobilelegends/?id=".$id."&zone=".$zone."&token=NguyenThuWan");
-                        }else{
-                            curl_setopt($ch, CURLOPT_URL, "https://api-xyz.com/trueid/freefire/?id=".$id."&token=NguyenThuWan");
+                        
+                        function curl($link, $headers = NULL, $post = NULL, $cookies = NULL){
+                            $ch = curl_init();
+                            //headers
+                            if($headers != NULL){
+                                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                            }
+                            //post
+                            if($post != NULL){
+                              curl_setopt($ch, CURLOPT_POST, 1);
+                              curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                            }
+                            //cookie
+                            if($cookies != NULL){
+                                $cookie_path = "./cookie/$cookies.txt";
+                                curl_setopt($ch, CURLOPT_COOKIEJAR, "$cookie_path");
+                                curl_setopt($ch, CURLOPT_COOKIEFILE, "$cookie_path");
+                            }
+                            //basic
+                            curl_setopt($ch, CURLOPT_URL, $link);
+                            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+                            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+                            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+                            $response = curl_exec($ch);
+                            curl_close($ch);
+                            if($cookies != NULL){
+                                unset($cookie_path);
+                            }
+                            return $response;
                         }
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-                
-                        $result = curl_exec($ch);
-                        curl_close($ch);
+
+                        $target_id = $_POST['user_id'];
+                        $target_zone = $_POST['server'];
+                        $link = "https://api.duniagames.co.id/api/transaction/v1/top-up/inquiry/store";
+                        $headers[] = "accept: application/json, text/plain, */*";
+                        $headers[] = "accept-language: id";
+                        $headers[] = "ciam-type: FR";
+                        $headers[] = "content-type: application/json";
+                        $headers[] = "origin: https://duniagames.co.id";
+                        $headers[] = "referer: https://duniagames.co.id/";
+                        $headers[] = "sec-ch-ua-mobile: ?0";
+                        $headers[] = "sec-fetch-dest: empty";
+                        $headers[] = "sec-fetch-mode: cors";
+                        $headers[] = "sec-fetch-site: same-site";
+                        $headers[] = "user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36";
+
+                        $query = '{"productId":1,"itemId":5,"catalogId":60,"paymentId":744,"gameId":"'.$target_id.'","zoneId":"'.$target_zone.'","product_ref":"CMS","product_ref_denom":"REG"}';
+                        $result = curl($link, $headers, $query);
                         $res = json_decode($result,true);
-                        if(isset($res['error_msg'])){
+
+                        if($res['status']['code'] != 0){
                             return '
                             <div class="alert alert-danger text-center" role="alert">
                                 <b>Akun tidak ditemukan!</b>
                             </div>';
                         }else{
-                            $nickname = $res['nickname'];
+                            $nickname = $res['data']['userNameGame'];
+                            echo '<input type="hidden" class="form-control" id="nickname" name="nickname" value="'.$nickname.'">';
                         }
                     }else{
                         $nickname = NULL;
                     }
+                }else if($paketData[0]['game-nickname'] == 'disabled'){
+                    $nickname = NULL;
                 }
 
                 // Penentuan Harga
-                $harga = $this->harga->getHarga($_POST['paket_id'], $_POST['nominal']);
-
-                if($_POST['promocode'] !== ''){
-                    $promo = $this->promo->getPromo($_POST['promocode']);
+                $harga = $this->harga->getHarga(false, $_POST['nominal']);
+                
+                if($_POST['promocode'] != ""){
+                    $prom = $this->promo->getPromo($_POST['promocode']);
+                    
+                    if(!empty($prom)){
+                        if($prom[0]['paket'] == '53' || $prom[0]['paket'] == $_POST['paket_id']){ // 53 adalah paket default
+                            if($harga[0]['harga_basic'] > $prom[0]['min']){
+                                if($prom[0]['disc'] > 1){
+                                    $disc = $prom[0]['disc'];
+                                }else{
+                                    $disc = $harga[0]['harga_basic']*$prom[0]['disc'];
+                                    if($disc > $prom[0]['max']){
+                                        $disc = $prom[0]['max'];
+                                    }
+                                }
+                            }else{
+                                $disc = 0;
+                            }
+                        }else{
+                            $disc = 0;
+                        }
+                    }else{
+                        $disc = 0;
+                    }
+                    
                 }else{
-                    $promo = false;
+                    $prom = false;
+                    $disc = 0;
                 }
 
                 if($harga){
                     
-                    $randomHarga = rand(1, 100);
                     $hargaBasic = $harga[0]['harga_basic'];
+                    $hargaFinal = $hargaBasic - $disc;
 
-                    $pembayaran = $this->pembayaran->getPembayaran($_POST['pembayaran']);
-                    $feePembayaran = $pembayaran[0]['fee'];
-                    
-                    if($feePembayaran == 0){
-                        $hargaTotal = $hargaBasic + $randomHarga;
-                    }else if($feePembayaran > 1){
-                        $hargaTotal = $hargaBasic + $feePembayaran + $randomHarga;
-                    }else if($feePembayaran < 1){
-                        $hargaTotal = $hargaBasic + ($hargaBasic * $feePembayaran) + $randomHarga;
+                    if($disc > 0){
+                        $hargaTotalView = 'Rp <s>'.str_replace(',', '.', number_format($hargaBasic)).'</s> '.str_replace(',', '.', number_format($hargaFinal));
+                    }else{
+                        $hargaTotalView = 'Rp '.str_replace(',', '.', number_format($hargaFinal));
                     }
-
-                    $hargaTotalView = 'Rp '.str_replace(',', '.', number_format($hargaTotal));
                     
                 }else{
                     return '
@@ -218,10 +286,45 @@ class Api extends ResourceController
                         <b>Harga Error!</b>
                     </div>';
                 }
+
+                // Snap
+                $time = time();
+                
+                if(empty($_POST['email'])){
+                    $email = 'empty@mail.com';
+                }else{
+                    $email = $_POST['email'];
+                }
+                
+                $cus_details = array(
+                    'email' => $email
+                );
+
+                $item_detail = array(
+                    'id' => strtoupper($gameData[0]['kode_game']).$paketData[0]['kode_paket'].$harga[0]['kode_harga'],
+                    'price' => $hargaFinal,
+                    'quantity' => 1,
+                    'name' => strtoupper($gameData[0]['kode_game']).$paketData[0]['kode_paket'].'-'.$harga[0]['nominal']
+                );
+                
+                $params = array(
+                    'transaction_details' => array(
+                        'order_id' => $time,
+                        'gross_amount' => $hargaFinal,
+                    ),
+                    'customer_details' => $cus_details,
+                    'item_details' => $item_detail,
+
+                );
+                
+                $data = [
+                    'snapToken' => \Midtrans\Snap::getSnapToken($params)
+                ];
                 
                 //Jika benar semua pengecekan
                 echo '
-                <div class="row m-3">
+                <input type="hidden" name="order_id" value="'.$time.'">
+                <div class="row mb-3">
                     <div class="col-12 text-center">
                         <h4>'.$gameData[0]['nama_game'].' - '.$paketData[0]['nama_paket'].'</h4>
                         <hr>
@@ -229,13 +332,12 @@ class Api extends ResourceController
                 </div>
                 ';
 
-
                 if(isset($_POST['server'])){
                     $user_id = $_POST['user_id'].' ('.$_POST['server'].')';
                 }else{
                     $user_id = $_POST['user_id'];
                 }
-                
+
                 echo '
                 <div class="row m-3">
                     <div class="col-5">
@@ -266,27 +368,14 @@ class Api extends ResourceController
                         <div class="col-5">
                             Nominal
                         </div>
-                        <div class="col-7">
+                        <div class="col-7" id="harga">
                             : '.$harga[0]['nominal'].'
                         </div>
                     </div>
                     ';
                 }
-
-                if($pembayaran){
-                    echo '
-                    <div class="row m-3">
-                        <div class="col-5">
-                            Bayar Via 
-                        </div>
-                        <div class="col-7">
-                            : '.strtoupper($pembayaran[0]['nama_pembayaran']).'
-                        </div>
-                    </div>
-                    ';
-                }
-
-                if($promo){
+                
+                if($prom){
                     echo '
                     <div class="row m-3">
                         <div class="col-5">
@@ -312,12 +401,27 @@ class Api extends ResourceController
                     ';
                 }
 
+                if(isset($_POST['note'])){
+                    echo '
+                    <div class="row m-3">
+                        <div class="col-5">
+                            Catatan 
+                        </div>
+                        <div class="col-7 note">
+                            : '.$_POST['note'].'
+                        </div>
+                    </div>
+                    ';
+                }
+                echo '
+                <button class="btn bg-sec-fastgaming text-white w-100" id="pay-button" onclick="snapMidtrans('."'".$data['snapToken']."'".')" type="button" value="Bayar">Bayar</button>
+                ';
+
             }else{
                 return 'Anda siapa?';
             }
             
     }
-
 }
 
 ?>

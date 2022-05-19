@@ -1,4 +1,4 @@
-<div class="bg-3rd-fastgaming my-2 py-2">
+<div class="bg-3rd-fastgaming py-2">
     <div class="demo text-white" id="demo">
 
     </div>

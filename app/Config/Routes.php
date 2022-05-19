@@ -38,13 +38,19 @@ $routes->get('/', 'Home::index');
 // Admin filter
 $routes->get('/admin', 'Admin::index', ['filter' => 'role:admin']);
 $routes->get('/admin/index', 'Admin::index', ['filter' => 'role:admin']);
+$routes->get('/admin/panel_admin', 'Admin::panelAdmin', ['filter' => 'role:admin']);
 
 // User filter
 $routes->get('/member', 'Member::index', ['filter' => 'role:user']);
 $routes->get('/member/index', 'Member::index', ['filter' => 'role:user']);
+$routes->get('/member/transaction_history', 'Member::historytx');
 
 // Public
 $routes->get('/paket/(:any)/(:any)', 'Home::games_paket/$1/$2');
+$routes->post('/processorder', 'Home::pOrder');
+$routes->post('/order_id', 'Home::redirect');
+$routes->get('/order_id/(:any)', 'Home::cekOrder/$1');
+
 
 
 /*
