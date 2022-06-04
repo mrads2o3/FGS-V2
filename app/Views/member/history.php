@@ -1,33 +1,65 @@
 <?= $this->extend('layout/template'); ?>
 
 <?= $this->section('content'); ?>
-<?php d($data); ?>
-<div class="card col-sm-8 col-lg-6 col-12 mx-auto mt-4">
+<div class="card col-sm-8 col-lg-8 col-12 mx-auto mt-4">
     <div class="card-header bg-sec-fastgaming text-white">
         Transaction History : <?= user()->username; ?>
     </div>
     <div class="card-body">
-        <div class="accordion" id="accordionExample">
-            <?php foreach($data as $a){ ?>
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="<?= $a['order_id']; ?>">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapse<?= $a['order_id']; ?>" aria-expanded="false"
-                        aria-controls="collapse<?= $a['order_id']; ?>">
-                        #<?= $a['order_id']; ?> <b class="badge bg-secondary mx-auto"><?= ucfirst($a['status']); ?></b>
-                    </button>
-                </h2>
-                <div id="collapse<?= $a['order_id']; ?>" class="accordion-collapse collapse"
-                    aria-labelledby="<?= $a['order_id']; ?>" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <b><?= $data[0]['created_at']; ?></b>
-                        <hr>
-                    </div>
-                </div>
-            </div>
-            <?php } ?>
-        </div>
+        <table id="table-history_user" class="table table-striped table-hover text-center">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Order ID</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+
+                foreach($data as $a){
+                    ?>
+                <tr>
+                    <td>
+                        <a href="<?= base_url('/order_id/'.$a['order_id']); ?>">
+                            <button class="btn bg-sec-fastgaming text-white" type="button"><i
+                                    class="fas fa-search"></i></button>
+                        </a>
+                    </td>
+                    <td>
+                        <?= '<b>'.$a['order_id'].'</b><br><small>'.$a['paket'].' - '.$a['nominal'].'</small>'; ?>
+                    </td>
+                    <td>
+                        <?php 
+                        if($a['status'] == 'pending'){
+                            $badge_color = 'bg-secondary';
+                        }else if($a['status'] == 'settlement'){
+                            $badge_color = 'bg-success';
+                        }else if($a['status'] == 'cancel'){
+                            $badge_color = 'bg-warning';
+                        }else if($a['status'] == 'failure'){
+                            $badge_color = 'bg-danger';
+                        }else if($a['status'] == 'expire'){
+                            $badge_color = 'bg-dark';
+                        }else if($a['status'] == 'process'){
+                            $badge_color = 'bg-info';
+                        }else if($a['status'] == 'finish'){
+                            $badge_color = 'bg-primary';
+                        }
+                        ?>
+                        <p class="badge <?= $badge_color; ?>"><?= ucfirst($a['status']); ?></p>
+                    </td>
+                </tr>
+                <?php
+                } 
+                    ?>
+            </tbody>
+        </table>
     </div>
 </div>
-
+<script>
+$(document).ready(function() {
+    $('#table-history_user').DataTable();
+});
+</script>
 <?= $this->endSection(); ?>

@@ -240,8 +240,9 @@ class Home extends BaseController
                 'username'=> $nickname,
                 'promocode' => $pcode,
                 'note' => $note, 
+                'email_notif' => $_POST['email'],
                 'total_harga' => $hargaFinal, 
-                'status' => 'belum bayar'
+                'status' => 'pending'
             ]);
             
             return redirect()->to(base_url('/order_id/'.$order_id));
@@ -253,30 +254,70 @@ class Home extends BaseController
 
     public function cekOrder($order_id = false)
     {
-        if($order_id != false){
+            if($order_id != false){
 
-            $cekMidtrans = \Midtrans\Transaction::status($order_id);
+                $getpesanan = $this->pesanan->getPesanan($order_id);
 
-            $pesanan = $this->pesanan->getPesanan($order_id);
-            
-            if(empty($pesanan)){
-                $pesanan = "Invalid Order ID";
+                if(isset($getpesanan['owner'])){
+                    if(logged_in()){
+                        if(user()->id != $getpesanan['owner']){
+                            return redirect()->to(base_url());
+                        }
+                    }else{
+                        return redirect()->to(base_url());
+                    }
+                }
+
+                if(empty($getpesanan)){
+                    $getpesanan = "Invalid Order ID";
+                    $cekMidtrans = false;
+                    $snap = false;
+                }else{
+                    $getpesanan = $getpesanan;
+                    $cekMidtrans = \Midtrans\Transaction::status($order_id);
+                    $snap = false;
+                    if($cekMidtrans == "404"){
+                        $snap = true;
+                        if($getpesanan['email_notif'] == '' || $getpesanan['email_notif'] == NULL || !isset($getpesanan['email_notif'])){
+                            $email = 'mail@mail.com';
+                        }else{
+                            $email = $getpesanan['email_notif'];
+                        }
+                        $cus_details = array(
+                            'email' => $email
+                        );
+        
+                        $item_detail = array(
+                            'id' => $getpesanan['order_id'],
+                            'price' => $getpesanan['total_harga'],
+                            'quantity' => 1,
+                            'name' => strtoupper($getpesanan['paket'].' - '.$getpesanan['nominal'])
+                        );
+                        $params = array(
+                            'transaction_details' => array(
+                                'order_id' => $order_id,
+                                'gross_amount' => $getpesanan['total_harga'],
+                            ),
+                            'customer_details' => $cus_details,
+                            'item_details' => $item_detail,
+                        );
+                        $cekMidtrans = \Midtrans\Snap::getSnapToken($params);
+                    }      
+                }
+
+                $data = [
+                    'data' => $getpesanan,
+                    'midtrans' => $cekMidtrans,
+                    'snap' => $snap
+                ];
+                
+                return view('public_view/view_order', $data);
+
             }else{
-                $pesanan = $pesanan[0];
+
+                return redirect()->to(base_url());
+
             }
-
-            $data = [
-                'data' => $pesanan,
-                'midtrans' => $cekMidtrans
-            ];
-            
-            return view('public_view/view_order', $data);
-
-        }else{
-
-            return redirect()->to(base_url());
-
-        }
     }
 
     public function redirect()

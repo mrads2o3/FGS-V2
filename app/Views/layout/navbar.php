@@ -7,7 +7,6 @@
             </h3>
         </a>
 
-
         <!-- 3 Strip -->
         <div class="d-flex">
             <button class="navbar-toggler bg-3rd-fastgaming" type="button" data-bs-toggle="offcanvas"
@@ -39,7 +38,8 @@
                     <?php }else{ ?>
                     <div class="row">
                         <div class="col my-4">
-                            Hallo, <b><?= user()->username.' ('.user()->getRoles()[1].')'; ?></b>
+                            <?php $roles = user()->getRoles()[0]['name'] ?>
+                            Hallo, <b><?= user()->username.' ('.$roles.')'; ?></b>
                         </div>
                     </div>
                     <?php
@@ -56,12 +56,12 @@
                 <div class="accordion" id="accordionExample">
                     <?php 
                         if(logged_in()){
-                            if(user()->getRoles()[1] == 'admin'){
+                            if($roles == 'admin'){
                     ?>
                     <!-- Menu jika sudah login  -->
                     <div class="accordion-menu">
                         <h2 class="accordion-header" id="headingOne">
-                            <a href="<?= base_url('/admin/panel_admin'); ?>">
+                            <a href="<?= base_url('/admin'); ?>">
                                 <button class="accordion-menu-button collapsed px-3" type="button">
                                     <i class="fas fa-user-cog mx-3"></i> Panel Admin
                                 </button>

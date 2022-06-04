@@ -9,6 +9,7 @@ use App\Models\UserAccessModel;
 use App\Models\PromoCodeModel;
 use App\Models\DaftarHargaModel;
 use App\Models\DaftarPembayaranModel;
+use App\Models\DaftarPesananModel;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -19,18 +20,21 @@ class Api extends ResourceController
     protected $sendTo;
     protected $promo;
     protected $paketApiModel;
+    protected $pesanan;
 
     use ResponseTrait;
 
     public function __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
+        $this->server_key = 'SB-Mid-server-P6N3tvTTqzL2Ou8wb_sroUQO';
         $this->sendTo = new UserAccessModel();
         $this->promo = new PromoCodeModel();
         $this->paketApiModel = new DaftarPaketModel();
         $this->gameApiModel = new DaftarGameModel();
         $this->harga = new DaftarHargaModel();
         $this->pembayaran = new DaftarPembayaranModel();
+        $this->pesanan = new DaftarPesananModel();
         $this->auth = service('authentication');
     }
 
@@ -98,7 +102,7 @@ class Api extends ResourceController
         }else{
             $paket_id = false;
         }
- 
+        
         return $this->sendTo->sendAccess($id, $game_id, $paket_id);
     }
 
@@ -144,8 +148,6 @@ class Api extends ResourceController
                 </div>';
             }
         }
-
-        $this->auth = service('authentication');
             if(isset($_POST)){
                 // Cek input atau post
                 foreach($_POST as $a=>$b){
@@ -290,36 +292,36 @@ class Api extends ResourceController
                 // Snap
                 $time = time();
                 
-                if(empty($_POST['email'])){
-                    $email = 'empty@mail.com';
-                }else{
-                    $email = $_POST['email'];
-                }
+                // if(empty($_POST['email'])){
+                //     $email = 'empty@mail.com';
+                // }else{
+                //     $email = $_POST['email'];
+                // }
                 
-                $cus_details = array(
-                    'email' => $email
-                );
+                // $cus_details = array(
+                //     'email' => $email
+                // );
 
-                $item_detail = array(
-                    'id' => strtoupper($gameData[0]['kode_game']).$paketData[0]['kode_paket'].$harga[0]['kode_harga'],
-                    'price' => $hargaFinal,
-                    'quantity' => 1,
-                    'name' => strtoupper($gameData[0]['kode_game']).$paketData[0]['kode_paket'].'-'.$harga[0]['nominal']
-                );
+                // $item_detail = array(
+                //     'id' => strtoupper($gameData[0]['kode_game']).$paketData[0]['kode_paket'].$harga[0]['kode_harga'],
+                //     'price' => $hargaFinal,
+                //     'quantity' => 1,
+                //     'name' => strtoupper($gameData[0]['kode_game']).$paketData[0]['kode_paket'].'-'.$harga[0]['nominal']
+                // );
                 
-                $params = array(
-                    'transaction_details' => array(
-                        'order_id' => $time,
-                        'gross_amount' => $hargaFinal,
-                    ),
-                    'customer_details' => $cus_details,
-                    'item_details' => $item_detail,
+                // $params = array(
+                //     'transaction_details' => array(
+                //         'order_id' => $time,
+                //         'gross_amount' => $hargaFinal,
+                //     ),
+                //     'customer_details' => $cus_details,
+                //     'item_details' => $item_detail,
 
-                );
+                // );
                 
-                $data = [
-                    'snapToken' => \Midtrans\Snap::getSnapToken($params)
-                ];
+                // $data = [
+                //     'snapToken' => \Midtrans\Snap::getSnapToken($params)
+                // ];
                 
                 //Jika benar semua pengecekan
                 echo '
@@ -413,14 +415,90 @@ class Api extends ResourceController
                     </div>
                     ';
                 }
-                echo '
-                <button class="btn bg-sec-fastgaming text-white w-100" id="pay-button" onclick="snapMidtrans('."'".$data['snapToken']."'".')" type="button" value="Bayar">Bayar</button>
-                ';
+                // echo '
+                // <button class="btn bg-sec-fastgaming text-white w-100" id="pay-button" onclick="snapMidtrans('."'".$data['snapToken']."'".')" type="button" value="Bayar">Bayar</button>
+                // ';
+                echo '<button class="btn bg-sec-fastgaming text-white w-100" type="submit" value="konfirmasi">KONFIRMASI</button>';
 
             }else{
                 return 'Anda siapa?';
             }
             
+    }
+
+    public function UpdateTxStatus()
+    {
+        $json_result = file_get_contents('php://input');
+        $result = json_decode($json_result);
+        if($result){
+            $sign_code = strval($result->order_id).strval($result->status_code).strval($result->gross_amount).$this->server_key;
+            $sign_code = hash('sha512', $sign_code);
+            if($sign_code == $result->signature_key){
+                if($result->transaction_status == 'settlement'){
+                    $pay_at = $result->transaction_time;
+                }else{
+                    $pay_at = '';
+                }
+                $array = [
+                    'status' => $result->transaction_status,
+                    'pay_at' => $pay_at,
+                ];
+                $this->pesanan->set($array)->where('order_id', $result->order_id)->update();
+            }               
+        }else{
+            return redirect()->to(base_url());
+        }
+    }
+
+    public function getDetailOrder($order_id = false)
+    {
+        if($order_id){
+            $query = $this->pesanan->where('order_id', $order_id)->first();
+            if($query){
+                $array = array(
+                    'code' => true,
+                    'data' => $query
+                );
+            }else{
+                $array = array(
+                    'code' => false,
+                    'data' => false
+                );
+            }
+            // d($array);
+            return json_encode($array);
+        }
+    }
+
+    public function updateStatus()
+    {
+        $result = $_POST;
+        if($result){
+            $order_id = $result['order_id'];
+            $status = $result['status'];
+            $array = ['', 'finish', 'process'];
+            $cek_status = array_search($status, $array);
+
+            if($cek_status){
+                $query = $this->pesanan->set([
+                    'status' => $status
+                ])->where(['order_id'=>$order_id])->update();
+                $arr = array(
+                    'order_id' => $order_id,
+                    'status' => '200'
+                );
+            }else{
+                $arr = array(
+                    'order_id' => $order_id,
+                    'status' => '404'
+                );
+            }
+        }else{
+            $arr = array(
+                'status' => '404'
+            );
+        }
+        return json_encode($arr);
     }
 }
 

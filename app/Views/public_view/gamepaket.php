@@ -185,11 +185,18 @@
                     }else{   
                 ?>
                     <div class="col-<?=$a['ukuran']?> col-lg-6 mb-2 p-1">
+                        <?php if($a['harga_promo'] != 0){ ?>
+                        <span class="position-absolute translate-middle badge rounded-pill bg-danger"
+                            style="margin-left:35px;">
+                            Promo!
+                        </span>
+                        <?php } ?>
                         <input class="btn-check" type="radio" name="nominal"
-                            id="harga-<?= $a['nominal'].'-'.$a['harga_basic']; ?>" value="<?= $a['kode_harga']; ?>"
-                            required="">
+                            id="harga-<?= $a['nominal'].'-'.$a['harga_basic'].'-'.$a['harga_promo']; ?>"
+                            value="<?= $a['kode_harga']; ?>" required="">
+
                         <label class="btn btn-outline-primary w-100"
-                            for="harga-<?= $a['nominal'].'-'.$a['harga_basic']; ?>">
+                            for="harga-<?= $a['nominal'].'-'.$a['harga_basic'].'-'.$a['harga_promo']; ?>">
                             <div class="d-flex">
                                 <?php
                                     if($a['c_matauang']){
@@ -239,9 +246,11 @@
 
                 <div class="row mx-1">
                     <hr>
-                    <h4>Harga : <b id="harga-total"></b><br>
-                        <small class="text-muted">(Harga diatas belum termasuk fee)</small>
+                    <h4 class="mb-0">Harga : <br>
+                        <s><small id="harga_awal"></small></s> <b id="harga-total"></b>
                     </h4>
+
+                    <small class="text-muted mb-2">(Harga diatas belum termasuk fee)</small>
                     <hr>
                     <b class="text-red text-center">PASTIKAN DATA YANG DI INPUT ADALAH BENAR!</b>
 
@@ -281,9 +290,16 @@ function changePrice(e) {
 
     if (this.checked) {
         harga = this.id.split("-");
-        harga = harga[2].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");;
-        document.getElementById('harga-total').innerText = `Rp${harga}`;
+        finalharga = harga[2].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+        if (harga[3] > 0) {
+            document.getElementById('harga_awal').innerHTML =
+                `Rp${harga[3].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")}`;
+        } else {
+            document.getElementById('harga_awal').innerHTML = '';
+        }
+        document.getElementById('harga-total').innerText = `Rp${finalharga}`;
     }
+
 }
 
 <?php 
@@ -347,31 +363,6 @@ exampleModal.addEventListener('show.bs.modal', function(event) {
         'application/x-www-form-urlencoded');
     req.send(data);
 });
-</script>
-
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-d6P8m8frZJGFVDPz"></script>
-<script>
-function snapMidtrans(snapToken) {
-
-    // SnapToken acquired from previous step
-    snap.pay(snapToken, {
-        // Optional
-        onSuccess: function(result) {
-            /* You may add your own js here, this is just example */
-            document.getElementById('form-input').submit();
-        },
-        // Optional
-        onPending: function(result) {
-            /* You may add your own js here, this is just example */
-            document.getElementById('form-input').submit();
-        },
-        // Optional
-        onError: function(result) {
-            /* You may add your own js here, this is just example */
-            document.getElementById('form-input').submit();
-        }
-    });
-};
 </script>
 
 <script src="<?= base_url('/js/detail_paket.js'); ?>"></script>

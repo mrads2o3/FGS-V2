@@ -32,6 +32,7 @@
 </head>
 
 <body>
+    <?php //dd(user()->getRoles()) ?>
     <!-- Navbar -->
     <?= $this->include('layout/navbar'); ?>
 

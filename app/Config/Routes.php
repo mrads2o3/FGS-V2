@@ -38,7 +38,14 @@ $routes->get('/', 'Home::index');
 // Admin filter
 $routes->get('/admin', 'Admin::index', ['filter' => 'role:admin']);
 $routes->get('/admin/index', 'Admin::index', ['filter' => 'role:admin']);
-$routes->get('/admin/panel_admin', 'Admin::panelAdmin', ['filter' => 'role:admin']);
+$routes->get('/admin/dashboard', 'Admin::dashboard', ['filter' => 'role:admin']);
+$routes->get('/admin/pesanan_dibayar', 'Admin::pesanan_dibayar', ['filter' => 'role:admin']);
+$routes->get('/admin/semua_pesanan', 'Admin::semua_pesanan', ['filter' => 'role:admin']);
+$routes->get('/admin/data/(:any)', 'Admin::data/$1', ['filter' => 'role:admin']);
+$routes->get('/api/detailorder/(:any)', 'Api::getDetailOrder/$1', ['filter' => 'role:admin']);
+$routes->post('/api/updatestatus', 'Api::updateStatus', ['filter' => 'role:admin']);
+
+
 
 // User filter
 $routes->get('/member', 'Member::index', ['filter' => 'role:user']);
@@ -50,7 +57,6 @@ $routes->get('/paket/(:any)/(:any)', 'Home::games_paket/$1/$2');
 $routes->post('/processorder', 'Home::pOrder');
 $routes->post('/order_id', 'Home::redirect');
 $routes->get('/order_id/(:any)', 'Home::cekOrder/$1');
-
 
 
 /*

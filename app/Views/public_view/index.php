@@ -32,7 +32,7 @@
         <form action="/order_id/" method="post">
             <div class="input-group mt-3">
                 <input type="text" class="form-control text-center" name="search-order_id" placeholder="CARI ORDER ID"
-                    aria-label="Masukan Order ID" aria-describedby="button-addon">
+                    aria-label="Masukan Order ID" aria-describedby="button-addon" required>
                 <button class="btn btn-outline-info" type="submit" id="button-addon">
                     <i class="fas fa-search"></i>
                 </button>
