@@ -9,7 +9,7 @@ class DaftarPesananModel extends Model
     protected $table = 'daftar_pesanan';
     protected $primaryKey = 'order_id';
     protected $useTimestamps = true;
-    protected $allowedFields = ['order_id', 'owner', 'paket', 'nominal', 'userid', 'username', 'promocode', 'note', 'email_notif' ,'total_harga', 'status', 'pay_at'];
+    protected $allowedFields = ['order_id', 'owner', 'paket', 'nominal', 'userid', 'username', 'promocode', 'note', 'email_notif' ,'total_harga', 'status', 'pay_at', 'process_time'];
     
     public function getPesanan($order_id=false)
     {

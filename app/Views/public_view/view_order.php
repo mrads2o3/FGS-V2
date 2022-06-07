@@ -8,6 +8,8 @@
 // dd($midtrans); 
 if($data == 'Invalid Order ID'){
     $order_id = 'Invalid Order ID';
+}else if($data == 'Private order'){
+    $order_id = 'Private order';
 }else{
     $order_id = $data['order_id'];
 }
@@ -19,10 +21,28 @@ if($data == 'Invalid Order ID'){
     </div>
 
     <?php 
-if($data == 'Invalid Order ID'){
+if($order_id == 'Invalid Order ID'){
 ?>
     <div class="card-body text-center">
         <b class="text-red"> INVALID ORDER ID </b>
+        <form action="/order_id/" method="post">
+            <div class="input-group mt-3">
+                <input type="text" class="form-control" name="search-order_id" placeholder="CARI ORDER ID"
+                    aria-label="Masukan Order ID" aria-describedby="button-addon">
+            </div>
+            <button class="btn bg-sec-fastgaming text-white mt-3 w-100" type="submit">Cari Ulang</button>
+        </form>
+        <a href="<?= base_url(); ?>">
+            <button class="btn bg-fastgaming text-white mt-3 w-100" type="button">Kembali</button>
+        </a>
+    </div>
+    <?php
+}else if($order_id == 'Private order'){
+    ?>
+    <div class="card-body text-center">
+        <b class="text-red"> PRIVATE ORDER! </b><br>
+        <small>Pesanan ini adalah pesanan <b class="text-red">PRIVATE</b> milik salah satu akun, jika ingin melihatnya
+            silahkan login dengan akun tersebut.</small>
         <form action="/order_id/" method="post">
             <div class="input-group mt-3">
                 <input type="text" class="form-control" name="search-order_id" placeholder="CARI ORDER ID"
@@ -207,6 +227,9 @@ if($data == 'Invalid Order ID'){
         if($snap){
             echo '<div class="text-danger text-center">PASTIKAN DATA YANG TERTERA ADALAH BENAR.</div>';
             echo '<button class="btn bg-sec-fastgaming text-white w-100" id="pay" type="button" value="BAYAR">BAYAR</button>';
+        }else if($midtrans=='expired'){
+            echo '<h5>Pesanan telah <b class="text-danger">expired</b>, harap memesan ulang dan jangan melanjutkan transaksi ini.</h5>
+            ';
         }else if($midtrans->transaction_status == $data['status']){
             if($data['status'] == 'pending'){
                 if($midtrans->payment_type == 'bank_transfer'){
@@ -245,10 +268,6 @@ if($data == 'Invalid Order ID'){
                 echo '
                 <h5>Pesanan telah <b class="text-danger">gagal</b>, harap memesan ulang dan jangan melanjutkan transaksi ini.</h5>
                 ';
-            }else if($data['status'] == 'cancel'){
-                echo '
-                <h5>Pesanan telah <b class="text-warning">di batalkan</b>, harap menghubungi admin untuk info lebih lanjut.</h5>
-                ';
             }else{
                 echo '
                 <h5>Pesanan <b class="text-danger">Error</b>, harap memesan ulang dan jangan melanjutkan transaksi ini.</h5>
@@ -256,11 +275,15 @@ if($data == 'Invalid Order ID'){
             }
         }else if($data['status'] == 'process'){
             echo '
-            <h5>Pesanan sedang di <b class="text-info">proses</b> oleh admin, harap menunggu hingga proses selesai.</h5>
+            <h5>Pesanan di <b class="text-info">proses</b> oleh admin pada tanggal <b class="text-red">'.$data['process_time'].'</b> paling lambat pengerjaan 1x24 Jam (Sesuai antrian).</h5>
             ';
         }else if($data['status'] == 'finish'){
             echo '
             <h5>Pesanan telah <b class="text-primary">sukses</b>, silahkan kembali lagi dan terimakasih ^^</h5>
+            ';
+        }else if($data['status'] == 'cancel'){
+            echo '
+            <h5>Pesanan telah <b class="text-warning">di batalkan</b>, harap menghubungi admin untuk info lebih lanjut.</h5>
             ';
         }else{
             echo '

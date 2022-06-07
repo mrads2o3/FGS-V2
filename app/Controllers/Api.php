@@ -476,17 +476,29 @@ class Api extends ResourceController
         if($result){
             $order_id = $result['order_id'];
             $status = $result['status'];
-            $array = ['', 'finish', 'process'];
+            $datetime = NULL;
+            if(isset($result['datetime'])){
+                $datetime = $result['datetime'];
+            }
+            $array = ['', 'finish', 'process', 'cancel'];
             $cek_status = array_search($status, $array);
 
             if($cek_status){
                 $query = $this->pesanan->set([
-                    'status' => $status
+                    'status' => $status, 'process_time' => $datetime
                 ])->where(['order_id'=>$order_id])->update();
-                $arr = array(
-                    'order_id' => $order_id,
-                    'status' => '200'
-                );
+                
+                if($query){
+                    $arr = array(
+                        'order_id' => $order_id,
+                        'status' => '200'
+                    );
+                }else{
+                    $arr = array(
+                        'order_id' => $order_id,
+                        'status' => '400'
+                    );
+                }
             }else{
                 $arr = array(
                     'order_id' => $order_id,

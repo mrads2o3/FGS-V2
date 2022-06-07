@@ -258,14 +258,36 @@ class Home extends BaseController
 
                 $getpesanan = $this->pesanan->getPesanan($order_id);
 
-                if(isset($getpesanan['owner'])){
+                if(!empty($getpesanan['owner'])){
                     if(logged_in()){
                         if(user()->id != $getpesanan['owner']){
-                            return redirect()->to(base_url());
+                            // return redirect()->to(base_url());
+                            $getpesanan = "Private order";
+                            $cekMidtrans = false;
+                            $snap = false;
+
+                            $data = [
+                                'data' => $getpesanan,
+                                'midtrans' => $cekMidtrans,
+                                'snap' => $snap
+                            ];
+                            
+                            return view('public_view/view_order', $data);   
                         }
                     }else{
-                        return redirect()->to(base_url());
-                    }
+                        // return redirect()->to(base_url());
+                        $getpesanan = "Private order";
+                        $cekMidtrans = false;
+                        $snap = false;
+                        
+                        $data = [
+                            'data' => $getpesanan,
+                            'midtrans' => $cekMidtrans,
+                            'snap' => $snap
+                        ];
+                        
+                        return view('public_view/view_order', $data);   
+                    } 
                 }
 
                 if(empty($getpesanan)){
@@ -273,6 +295,18 @@ class Home extends BaseController
                     $cekMidtrans = false;
                     $snap = false;
                 }else{
+                    if($getpesanan['status'] == 'pending' && $getpesanan['order_id'] < strtotime("-1 day")){
+                        $cekMidtrans = 'expired';
+                        $snap = false;
+                        $data = [
+                            'data' => $getpesanan,
+                            'midtrans' => $cekMidtrans,
+                            'snap' => $snap
+                        ];
+                        
+                        return view('public_view/view_order', $data);
+                    }
+
                     $getpesanan = $getpesanan;
                     $cekMidtrans = \Midtrans\Transaction::status($order_id);
                     $snap = false;

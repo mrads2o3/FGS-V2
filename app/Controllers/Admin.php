@@ -63,6 +63,7 @@ class Admin extends BaseController
     {
         $data = [
             'dashboard' => '',
+            'pesanan_proses' => '',
             'pesanan_dibayar' => 'active',
             'semua_pesanan' => '',
             'data_pesanan_dibayar' => $this->pesanan->where('status', 'settlement')->orderby('pay_at', 'ASC')->findAll(),
@@ -70,10 +71,23 @@ class Admin extends BaseController
         return view('admin/pesanan_dibayar', $data);
     }
 
+    public function pesanan_proses()
+    {
+        $data = [
+            'dashboard' => '',
+            'pesanan_proses' => 'active',
+            'pesanan_dibayar' => '',
+            'semua_pesanan' => '',
+            'data_pesanan_dibayar' => $this->pesanan->where('status', 'process')->orderby('updated_at', 'DESC')->findAll(),
+        ];
+        return view('admin/pesanan_proses', $data);
+    }
+
     public function semua_pesanan()
     {
         $data = [
             'dashboard' => '',
+            'pesanan_proses' => '',
             'pesanan_dibayar' => '',
             'semua_pesanan' => 'active',
             'data_pesanan' => $this->pesanan->orderby('order_id', 'DESC')->findAll(),
@@ -86,8 +100,12 @@ class Admin extends BaseController
         if($kode != false){
             if($kode == 'getpesanandibayar'){
                 $data = $this->pesanan->where('status', 'settlement')->orderby('pay_at', 'ASC')->findAll();
-                return json_encode($data);
+            }else if($kode == "getsemuapesanan"){
+                $data = $this->pesanan->orderby('updated_at', 'DESC')->findAll();
+            }else if($kode == "getpesanandiproses"){
+                $data = $this->pesanan->where(['status' => 'process'])->orderby('updated_at', 'DESC')->findAll();
             }
+            return json_encode($data);
         }
     }
 }

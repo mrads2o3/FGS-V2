@@ -1,6 +1,7 @@
 <?= $this->extend('admin/template'); ?>
 
 <?= $this->section('content'); ?>
+
 <h1 class="h3 mb-4 text-gray-800">Semua Pesanan</h1>
 <div class="card shadow">
     <div class="card-header py-3">
@@ -9,17 +10,16 @@
 
     <div class="card-body text-gray-800">
         <div class="table-responsive">
-            <table class="table table-bordered text-center" id="table-pesanan" width="100%" cellspacing="0">
+            <table class="table table-bordered text-center" id="table-pesanan-proses" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Order ID</th>
                         <th>Paket</th>
-                        <th>Nominal</th>
-                        <th>Status</th>
+                        <th>Tgl. Mulai Proses</th>
                     </tr>
                 </thead>
-                <tbody id="DataTableSemuaPesanan">
+                <tbody id="DataTablePesananProses">
                 </tbody>
             </table>
         </div>
@@ -75,6 +75,7 @@
         </div>
     </div>
 </div>
+
 <?= $this->endSection(); ?>
 
 <?= $this->section('datatables'); ?>
@@ -86,7 +87,7 @@ $(document).ready(function() {
 function showTable() {
     $.ajax({
         type: 'GET',
-        url: '<?php echo base_url('admin/data/getsemuapesanan')?>',
+        url: '<?php echo base_url('admin/data/getpesanandiproses')?>',
         async: true,
         dataType: 'json',
         success: function(data) {
@@ -94,39 +95,22 @@ function showTable() {
             var i;
             for (i = 0; i < data.length; i++) {
 
-                if (data[i].status == 'pending') {
-                    badge_color = 'bg-secondary';
-                } else if (data[i].status == 'settlement') {
-                    badge_color = 'bg-success';
-                } else if (data[i].status == 'cancel') {
-                    badge_color = 'bg-warning';
-                } else if (data[i].status == 'failure') {
-                    badge_color = 'bg-danger';
-                } else if (data[i].status == 'expire') {
-                    badge_color = 'bg-dark';
-                } else if (data[i].status == 'process') {
-                    badge_color = 'bg-info';
-                } else if (data[i].status == 'finish') {
-                    badge_color = 'bg-primary';
-                }
-
                 html += '<tr>' +
                     '<td><a href="#" data-toggle="modal" data-target="#ModalDetail" class="TombolDetail" data="' +
                     data[i].order_id + '">Detail</a></td>' +
                     '<td>' + data[i].order_id + '</td>' +
                     '<td>' + data[i].paket + '</td>' +
-                    '<td>' + data[i].total_harga + '</td>' +
-                    '<td> <p class="badge ' + badge_color + ' text-white">' + data[i].status + '</p></td>' +
+                    '<td>' + data[i].process_time + '</td>' +
                     '</tr>';
             }
-            $('#DataTableSemuaPesanan').html(html);
-            $('#table-pesanan').DataTable();
+            $('#DataTablePesananProses').html(html);
+            $('#table-pesanan-proses').DataTable();
         }
 
     });
 }
 
-$('#DataTableSemuaPesanan').on('click', '.TombolDetail', function() {
+$('#DataTablePesananProses').on('click', '.TombolDetail', function() {
     var order_id = $(this).attr('data');
     $('#OrderIDModalDetail').html(order_id);
     $('#DetailPaket').html('Loading...');

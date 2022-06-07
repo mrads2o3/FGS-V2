@@ -38,14 +38,6 @@
                 </button>
             </div>
             <div class="ModalUpdate-body container-fluid p-3">
-                <!-- <div class="form-group row">
-                    <label for="DetailOrderID" class="col-sm-3 col-form-label">ID</label>
-                    <div class="col-12">
-                        <input type="number" class="form-control text-center text-danger" id="DetailOrderID"
-                            name="DetailOrderID" placeholder="ORDER ID" readonly>
-                    </div>
-                </div> -->
-
                 <div id="DetailPaket" class="text-center"></div>
                 <hr>
                 <div class="row mb-1">
@@ -80,8 +72,32 @@
             </div>
             <div class="modal-footer detail-footer">
                 <button type="button" class="btn btn-danger" id="CancelButton">Cancel</button>
-                <button type="button" class="btn btn-primary" id="ProcessButton">Process (PO)</button>
+                <button type="button" class="btn btn-primary" id="ProcessButton" data-toggle="modal"
+                    data-target="#ModalProcess">Process (PO)</button>
                 <button type="button" class="btn btn-success" id="FinishButton">Finish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Process-->
+<div class="modal fade" id="ModalProcess" tabindex="-1" role="dialog" aria-labelledby="example1ModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="example1ModalLabel">Proses Order <span id="OrderIDModalProcess"></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <span>Tanggal Diproses</span>
+                <input type="datetime-local" class="input-group-text w-100" name="DatetimeProcess" id="DatetimeProcess">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="SaveProcessButton">Save changes</button>
             </div>
         </div>
     </div>
@@ -128,7 +144,10 @@ function showTable() {
 $('#DataTableAntrian').on('click', '.TombolUpdate', function() {
     var order_id = $(this).attr('data');
     $('#OrderIDModalDetail').html(order_id);
+    $('#OrderIDModalProcess').html(order_id);
     $('#FinishButton').val(order_id);
+    $('#CancelButton').val(order_id);
+    $('#SaveProcessButton').val(order_id);
     $('#DetailPaket').html('Loading...');
     $('#DetailNominal').html('Loading...');
     $('#DetailUserID').html('Loading...');
@@ -155,7 +174,7 @@ $('#DataTableAntrian').on('click', '.TombolUpdate', function() {
     });
 });
 
-// Fungsi finish
+// Function finish
 $('#FinishButton').on('click', function() {
     var order_id = $(this).attr('value');
     if (confirm('Are you sure want to change status order ' + order_id + ' to "Finish"?')) {
@@ -169,7 +188,67 @@ $('#FinishButton').on('click', function() {
             },
             success: function(data) {
                 if (data.status == 200) {
-                    alert("Order ID " + data.order_id + " Telah selesai.");
+                    alert("Order ID " + data.order_id + " Telah berhasil diubah.");
+                } else if (data.status == 400) {
+                    alert("Order ID " + data.order_id + " Gagal diubah.");
+                }
+
+                $('#ModalUpdate').modal('hide');
+                showTable();
+            }
+        });
+    }
+});
+
+// Function save
+$('#SaveProcessButton').on('click', function() {
+    var order_id = $(this).attr('value');
+    var date_time = $('[name="DatetimeProcess"]').val();
+
+    if (date_time == '') {
+        alert("Isi Tanggal!");
+    } else if (confirm('Are you sure want to change status order ' + order_id +
+            ' to "Process" and time process is "' +
+            date_time + '"?')) {
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('api/updatestatus'); ?>",
+            dataType: "JSON",
+            data: {
+                order_id: order_id,
+                status: 'process',
+                datetime: date_time
+            },
+            success: function(data) {
+                if (data.status == 200) {
+                    alert("Order ID " + data.order_id + " Telah berhasil diubah.");
+                } else if (data.status == 400) {
+                    alert("Order ID " + data.order_id + " Gagal diubah.");
+                }
+                $('#ModalProcess').modal('hide');
+                $('#ModalUpdate').modal('hide');
+                showTable();
+            }
+        });
+    }
+});
+
+// Function cancel
+$('#CancelButton').on('click', function() {
+    var order_id = $(this).attr('value');
+    if (confirm('Are you sure want to change status order ' + order_id + ' to "Cancel"?')) {
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url('api/updatestatus'); ?>",
+            dataType: "JSON",
+            data: {
+                order_id: order_id,
+                status: 'cancel'
+            },
+            success: function(data) {
+                if (data.status == 200) {
+                    alert("Order ID " + data.order_id + " Telah berhasil diubah.");
                 } else if (data.status == 400) {
                     alert("Order ID " + data.order_id + " Gagal diubah.");
                 }

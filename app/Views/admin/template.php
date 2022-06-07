@@ -64,6 +64,11 @@
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Pesanan Dibayar</span></a>
             </li>
+            <li class="nav-item <?= $pesanan_proses; ?>">
+                <a class="nav-link" href="<?= base_url('admin/pesanan_proses'); ?>">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Pesanan Diproses</span></a>
+            </li>
             <li class="nav-item <?= $semua_pesanan; ?>">
                 <a class="nav-link" href="<?= base_url('admin/semua_pesanan'); ?>">
                     <i class="fas fa-fw fa-tachometer-alt"></i>

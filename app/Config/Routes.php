@@ -41,6 +41,7 @@ $routes->get('/admin/index', 'Admin::index', ['filter' => 'role:admin']);
 $routes->get('/admin/dashboard', 'Admin::dashboard', ['filter' => 'role:admin']);
 $routes->get('/admin/pesanan_dibayar', 'Admin::pesanan_dibayar', ['filter' => 'role:admin']);
 $routes->get('/admin/semua_pesanan', 'Admin::semua_pesanan', ['filter' => 'role:admin']);
+$routes->get('/admin/pesanan_proses', 'Admin::pesanan_proses', ['filter' => 'role:admin']);
 $routes->get('/admin/data/(:any)', 'Admin::data/$1', ['filter' => 'role:admin']);
 $routes->get('/api/detailorder/(:any)', 'Api::getDetailOrder/$1', ['filter' => 'role:admin']);
 $routes->post('/api/updatestatus', 'Api::updateStatus', ['filter' => 'role:admin']);
