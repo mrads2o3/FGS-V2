@@ -23,6 +23,12 @@ class DaftarHargaModel extends Model
             return $this->where(['kode_paket'=>$kode_paket])->findAll();
         }
     }
+
+    public function getAllNominal()
+    {
+        $data = $this->db->table('daftar_paket')->join('daftar_harga', 'daftar_harga.kode_paket = daftar_paket.kode_paket')->orderby('daftar_harga.kode_paket', 'ASC')->get();
+        return $data;
+    }
 }
 
 ?>

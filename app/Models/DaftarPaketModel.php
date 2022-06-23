@@ -15,7 +15,6 @@ class DaftarPaketModel extends Model
     
     public function getPaket($slug_game=false, $paket_id=false)
     {
-        
         if($slug_game=false && $paket_id=false){
             return $this->where(['status' => 'enabled'])->orderBy('urutan', 'ASC')->findAll();
         }else if($slug_game!=false && $paket_id!=false){
@@ -25,6 +24,12 @@ class DaftarPaketModel extends Model
         }else if($paket_id!=false){
             return $this->where(['kode_paket'=>$paket_id,'status'=>'enabled'])->findAll();
         }
+    }
+
+    public function getAllPaket()
+    {
+        $data = $this->db->table('daftar_paket')->join('daftar_game', 'daftar_paket.slug_game = daftar_game.slug')->orderby('kode_paket', 'ASC')->get();
+        return $data;
     }
 }
 

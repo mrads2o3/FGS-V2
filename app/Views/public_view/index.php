@@ -2,8 +2,48 @@
 
 <?= $this->section('content'); ?>
 
+<link rel="stylesheet" href="<?= base_url('/css/toastr.css'); ?>">
+<script src="<?= base_url('/js/toastr.js'); ?>"></script>
+
+<?php 
+    function replaceText($string, $digit){
+        $split = str_split($string);
+        $jumString = strlen($string);
+
+        $replace_with = '*';
+        $replace_start = $jumString - $digit;
+
+        if($replace_start < 0){
+            return $string;
+        }
+
+        $str_fmt = '';
+        for($i=0;$i<$jumString;$i++){
+            if($i < $replace_start){
+                $str_fmt .= $split[$i];
+            }else{
+                $str_fmt .= $replace_with;
+            }
+        }
+
+        return $str_fmt;
+    }
+    
+    $lasttx_text = "";
+    $count = 0;
+    foreach($last_tx as $a){
+        $lasttx_text .= "ORDER ID : ".replaceText($a['order_id'], 3).", Paket : ".$a['paket'].", Nominal : ".$a['nominal'].", Selesai pada ".$a['updated_at'];
+        if($count <= 10){
+            $lasttx_text .= " | ";
+        }else{
+            break;
+        }
+        $count++;
+    }
+?>
+
 <div class="row">
-    <marquee class="col mb-0 text-white last-tx_box mt-2">Transaksi terakhir yang berhasil : Tes Tes</marquee>
+    <marquee class="col mb-0 text-white last-tx_box mt-2"><?= $lasttx_text; ?></marquee>
 </div>
 
 <div class="row">
@@ -64,5 +104,24 @@
 </div>
 
 <script src="<?= base_url('/js/public-index.js'); ?>"></script>
-
+<script>
+toastr.options = {
+    "closeButton": false,
+    "debug": false,
+    "newestOnTop": false,
+    "progressBar": true,
+    "positionClass": "toast-top-right",
+    "preventDuplicates": false,
+    "onclick": null,
+    "showDuration": "300",
+    "hideDuration": "1000",
+    "timeOut": "5000",
+    "extendedTimeOut": "5000",
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+}
+toastr.info('Welcome To Fastgaming Store!')
+</script>
 <?= $this->endSection(); ?>

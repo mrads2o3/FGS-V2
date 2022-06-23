@@ -75,6 +75,52 @@
                     <span>Semua Pesanan</span></a>
             </li>
 
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Konten
+            </div>
+
+            <li class="nav-item <?= $files; ?>">
+                <a class="nav-link" href="<?= base_url('admin/files'); ?>">
+                    <i class="fas fa-fw fa-file"></i>
+                    <span>Files</span></a>
+            </li>
+
+            <li class="nav-item <?= $games; ?>">
+                <a class="nav-link" href="<?= base_url('admin/games'); ?>">
+                    <i class="fas fa-fw fa-gamepad"></i>
+                    <span>Games</span></a>
+            </li>
+
+            <li class="nav-item <?= $paket; ?>">
+                <a class="nav-link" href="<?= base_url('admin/paket'); ?>">
+                    <i class="fas fa-fw fa-archive"></i>
+                    <span>Paket</span></a>
+            </li>
+
+            <li class="nav-item <?= $nominal; ?>">
+                <a class="nav-link" href="<?= base_url('admin/nominal'); ?>">
+                    <i class="fas fa-fw fa-money-bill-wave"></i>
+                    <span>Nominal</span></a>
+            </li>
+
+            <li class="nav-item <?= $promo; ?>">
+                <a class="nav-link" href="<?= base_url('admin/promo'); ?>">
+                    <i class="fas fa-fw fa-qrcode"></i>
+                    <span>Promo</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Lainnya
+            </div>
+
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"

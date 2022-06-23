@@ -28,26 +28,28 @@
                                     <input type="text"
                                         class="form-control form-control-user <?php if(session('errors.username')) : ?>is-invalid<?php endif ?>"
                                         name="username" placeholder="<?=lang('Auth.username')?>"
-                                        value="<?= old('username') ?>">
+                                        value="<?= old('username') ?>" required>
                                 </div>
 
                                 <div class="form-group">
                                     <input type="email"
                                         class="form-control form-control-user <?php if(session('errors.email')) : ?>is-invalid<?php endif ?>"
-                                        name="email" placeholder="<?=lang('Auth.email')?>" value="<?= old('email') ?>">
+                                        name="email" placeholder="<?=lang('Auth.email')?>" value="<?= old('email') ?>"
+                                        required>
                                 </div>
 
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password"
                                             class="form-control form-control-user <?php if(session('errors.password')) : ?>is-invalid<?php endif ?>"
-                                            placeholder="<?=lang('Auth.password')?>" autocomplete="off" name="password">
+                                            placeholder="<?=lang('Auth.password')?>" autocomplete="off" name="password"
+                                            required>
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password"
                                             class="form-control form-control-user <?php if(session('errors.pass_confirm')) : ?>is-invalid<?php endif ?>"
                                             placeholder="<?=lang('Auth.repeatPassword')?>" autocomplete="off"
-                                            name="pass_confirm">
+                                            name="pass_confirm" required>
                                     </div>
                                 </div>
 

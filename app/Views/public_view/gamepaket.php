@@ -1,6 +1,8 @@
 <?= $this->extend('layout/template'); ?>
 
 <?= $this->section('content'); ?>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="<?= base_url('/js/validation_recaptcha.js'); ?>" async defer></script>
 <div class="row text-white mb-2">
     <h3 class="bg-3rd-fastgaming text-center text-white my-4 p-4"><?= strtoupper($paket[0]['nama_paket']); ?></h3>
 </div>
@@ -21,7 +23,7 @@
         </div>
     </div>
     <div class="col-lg-7 col-12 text-black">
-        <form action="/processorder" method="post" id="form-input">
+        <form action="/processorder" method="post" id="form-input" onsubmit="return submitUserForm();">
             <div class="card card-body px-2 pt-4 pb-2 mb-5" style="border-radius: 30px 30px 0px 0px;">
                 <h4 class="text-center">
                     <b>PROMO CODE</b>
@@ -253,6 +255,14 @@
                     <small class="text-muted mb-2">(Harga diatas belum termasuk fee)</small>
                     <hr>
                     <b class="text-red text-center">PASTIKAN DATA YANG DI INPUT ADALAH BENAR!</b>
+
+                    <center>
+                        <div class="g-recaptcha" id="recaptcha" data-sitekey="6LeUpqkfAAAAAFVeVGcUssiZPy8TbFPTdWqU1gWq"
+                            data-callback="verifyCaptcha">
+                        </div>
+                        <div id="g-recaptcha-error"></div>
+                        <?php //$id_id = "-recaptcha" ?>
+                    </center>
 
                     <button class="btn bg-sec-fastgaming text-white w-100 mt-3 mb-3" type="button"
                         data-bs-toggle="modal" data-bs-target="#modalPesan"

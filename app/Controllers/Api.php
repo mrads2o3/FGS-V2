@@ -10,6 +10,7 @@ use App\Models\PromoCodeModel;
 use App\Models\DaftarHargaModel;
 use App\Models\DaftarPembayaranModel;
 use App\Models\DaftarPesananModel;
+use App\Models\AntrianProcessModel;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -21,6 +22,7 @@ class Api extends ResourceController
     protected $promo;
     protected $paketApiModel;
     protected $pesanan;
+    protected $AProcess;
 
     use ResponseTrait;
 
@@ -35,6 +37,7 @@ class Api extends ResourceController
         $this->harga = new DaftarHargaModel();
         $this->pembayaran = new DaftarPembayaranModel();
         $this->pesanan = new DaftarPesananModel();
+        $this->AProcess = new AntrianProcessModel();
         $this->auth = service('authentication');
     }
 
@@ -139,7 +142,7 @@ class Api extends ResourceController
             }
             return FALSE;
         }
-
+        
         if(!empty($_POST['email'])){
             if(!is_email_valid($_POST['email'])){
                 return '
@@ -465,21 +468,23 @@ class Api extends ResourceController
                     'data' => false
                 );
             }
-            // d($array);
+
             return json_encode($array);
         }
     }
 
     public function updateStatus()
     {
-        $result = $_POST;
-        if($result){
-            $order_id = $result['order_id'];
-            $status = $result['status'];
+        $data = $_POST;
+        if(isset($data)){
+            $order_id = $data['order_id'];
+            $status = $data['status'];
             $datetime = NULL;
-            if(isset($result['datetime'])){
-                $datetime = $result['datetime'];
+
+            if(isset($data['datetime'])){
+                $datetime = $data['datetime'];
             }
+            
             $array = ['', 'finish', 'process', 'cancel'];
             $cek_status = array_search($status, $array);
 
@@ -487,6 +492,10 @@ class Api extends ResourceController
                 $query = $this->pesanan->set([
                     'status' => $status, 'process_time' => $datetime
                 ])->where(['order_id'=>$order_id])->update();
+
+                if($status == 'process'){
+                    $this->AProcess->insert(['order_id' => $order_id]);
+                }
                 
                 if($query){
                     $arr = array(
@@ -511,6 +520,88 @@ class Api extends ResourceController
             );
         }
         return json_encode($arr);
+    }
+
+    public function CutomizeProcessOrder()
+    {
+        $data = $_POST;
+        if(isset($data)){
+            if($data['type'] == 'adjust'){
+                if($data['checkbox'] == 'true'){
+                    
+                    $var = $this->pesanan->where('order_id', $data['order_id'])->first();
+                    $set = [
+                        'process_time' => $data['datetime'], 
+                    ];
+                    
+                    $var2 = $this->pesanan->set($set)->where(['paket' => $var['paket'], 'status' => 'process'])->update();
+
+                    if($var2){
+                        $arr = array(
+                            'status' => '200',
+                            'var' => $var2
+                        );
+                    }else{
+                        $arr = array(
+                            'status' => '404',
+                            'var' => $var2
+                        );
+                    }
+
+                }else{   
+
+                    $set = [
+                        'process_time' => $data['datetime'], 
+                    ];  
+
+                    $var = $this->pesanan->set($set)->where(['order_id' => $data['order_id'], 'status' => 'process'])->update();  
+
+                    if($var){
+                        $arr = array(
+                            'status' => '200',
+                            'var' => $var
+                        );
+                    }else{
+                        $arr = array(
+                            'status' => '404',
+                            'var' => $var
+                        );
+                    }
+                    
+                }
+            }else if($data['type'] == 'cancel' || $data['type'] == 'finish'){
+
+                $var = $this->pesanan->set(['status' => $data['type']])->where(['order_id' => $data['order_id'], 'status' => 'process'])->update(); 
+                
+                if($var){
+                    $this->AProcess->where(['order_id' => $data['order_id']])->delete();
+                }
+
+                $arr = array(
+                    'status' => '200',
+                    'var' => $var
+                );
+
+            }
+        }else{
+            $arr = array(
+                'status' => '404',
+                'var' => false
+            );
+        };
+        // $arr = array(
+        //     'checkbox' => $data['checkbox'],
+        //     'datetime' => $data['datetime'],
+        // );
+        return json_encode($arr);
+    }
+
+    public function test()
+    {
+        // $query = $this->AProcess->select("*")->join('daftar_pesanan', 'daftar_pesanan.order_id = antrian_proses.order_id');
+        // return d($query);
+        $query = $this->AProcess->getAntrianProcess()->getResult();
+        return d($query);
     }
 }
 

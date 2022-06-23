@@ -19,6 +19,12 @@ class PromoCodeModel extends Model
             return $this->findAll();
         }
     }
+
+    public function getAllPromo()
+    {
+        $data = $this->db->table('daftar_paket')->join('promo_code', 'daftar_paket.kode_paket = promo_code.paket')->orderby('id', 'ASC')->get();
+        return $data;
+    }
 }
 
 ?>

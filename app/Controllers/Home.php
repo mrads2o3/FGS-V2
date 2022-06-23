@@ -45,6 +45,7 @@ class Home extends BaseController
             'user_id' => $user_id,
             'newgames' => $this->games->where(['status'=>'enabled'])->orderBy('created_at', 'DESC')->findAll(),
             'banner' => $this->files->getFiles('banner_home'),
+            'last_tx' => $this->pesanan->where('status', 'finish')->orderby('updated_at', 'DESC')->findAll(),
         ];
         return view('public_view/index', $data);
     }
@@ -77,6 +78,58 @@ class Home extends BaseController
     {
         if(isset($_POST)){
             // Cek input atau post
+            // dd($_POST);
+            // if($_POST['g-recaptcha-response'] != ""){
+            //     //Alternatif jika lagh!
+            //     // return 0;
+
+            //     //Jika tidak lagh
+            //     // $url = 'http://www.google.com/recaptcha/api/siteverify';
+            //     // $data = array('secret' => '6LeUpqkfAAAAAB7piY86GYe0vSBi_iKf_77CjRan', 'response' => $_POST['g-recaptcha-response']);
+                
+            //     // // use key 'http' even if you send the request to https://...
+            //     // $options = array(
+            //     //     'http' => array(
+            //     //         'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            //     //         'method'  => 'POST',
+            //     //         'content' => http_build_query($data)
+            //     //     )
+            //     // );
+                
+                
+            //     // $context  = stream_context_create($options);
+            //     // $result = file_get_contents($url, false, $context);
+            //     // if ($result === FALSE) {}
+            //     // dd($_POST);
+            //     // $res = json_decode($result);
+
+            //     // if(!$res->success){
+            //     //     return "Google Recaptcha Failed or Required!";
+            //     // }
+            //     $captcha=$_POST['g-recaptcha-response'];
+            //     $secretKey = "6LeUpqkfAAAAAB7piY86GYe0vSBi_iKf_77CjRan";
+            //     $ip = $_SERVER['REMOTE_ADDR'];
+            //     $response=file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=".$secretKey."&response=".$captcha."&remoteip=".$ip);
+            //     $responseKeys = json_decode($response,true);
+            //     d($responseKeys);
+          
+            //     dd($_POST);
+                
+            // }
+
+            if(isset($_POST['g-recaptcha-response']))
+            {
+                $captcha=$_POST['g-recaptcha-response'];
+            }
+
+            $secretKey = "6LeUpqkfAAAAAB7piY86GYe0vSBi_iKf_77CjRan";
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($secretKey) .  '&response=' . urlencode($captcha).'&remoteip='.$ip;
+            $response = file_get_contents($url);
+            $responseKeys = json_decode($response,true);
+            d($responseKeys);
+            dd($_POST);
+
             foreach($_POST as $a=>$b){
                 if($a != 'promocode' && $a != 'email'){
                     if($b=='' || empty($b) || $b== NULL || $b == 'undefined'){

@@ -8,7 +8,8 @@ use App\Models\PromoCodeModel;
 use App\Models\DaftarHargaModel;
 use App\Models\DaftarPembayaranModel;
 use App\Models\DaftarPesananModel;
-
+use App\Models\AntrianProcessModel;
+use App\Models\FilesModel;
 class Admin extends BaseController
 {   
     public function __construct()
@@ -19,7 +20,9 @@ class Admin extends BaseController
         $this->gameApiModel = new DaftarGameModel();
         $this->harga = new DaftarHargaModel();
         $this->pembayaran = new DaftarPembayaranModel();
-        $this->pesanan = new DaftarPesananModel();    
+        $this->pesanan = new DaftarPesananModel(); 
+        $this->AProcess = new AntrianProcessModel();   
+        $this->files = new FilesModel();
     }
 
     public function index()
@@ -50,7 +53,13 @@ class Admin extends BaseController
         $data = [
             'dashboard' => 'active',
             'pesanan_dibayar' => '',
+            'pesanan_proses' => '',
             'semua_pesanan' => '',
+            'files' => '',
+            'games' => '',
+            'paket' => '',
+            'nominal' => '',
+            'promo' => '',
             'pesanan_daily' => $this->pesanan->where('order_id >'.strtotime("today"))->where('order_id <'.strtotime("today +1 day"))->findAll(),
             'pesanan_alltime' => $this->pesanan->getPesananAlltime(),
             'dashboard_chart' => $var
@@ -66,7 +75,11 @@ class Admin extends BaseController
             'pesanan_proses' => '',
             'pesanan_dibayar' => 'active',
             'semua_pesanan' => '',
-            'data_pesanan_dibayar' => $this->pesanan->where('status', 'settlement')->orderby('pay_at', 'ASC')->findAll(),
+            'files' => '',
+            'games' => '',
+            'paket' => '',
+            'nominal' => '',
+            'promo' => '',
         ];
         return view('admin/pesanan_dibayar', $data);
     }
@@ -78,7 +91,11 @@ class Admin extends BaseController
             'pesanan_proses' => 'active',
             'pesanan_dibayar' => '',
             'semua_pesanan' => '',
-            'data_pesanan_dibayar' => $this->pesanan->where('status', 'process')->orderby('updated_at', 'DESC')->findAll(),
+            'files' => '',
+            'games' => '',
+            'paket' => '',
+            'nominal' => '',
+            'promo' => '',
         ];
         return view('admin/pesanan_proses', $data);
     }
@@ -90,9 +107,93 @@ class Admin extends BaseController
             'pesanan_proses' => '',
             'pesanan_dibayar' => '',
             'semua_pesanan' => 'active',
-            'data_pesanan' => $this->pesanan->orderby('order_id', 'DESC')->findAll(),
+            'files' => '',
+            'games' => '',
+            'paket' => '',
+            'nominal' => '',
+            'promo' => '',
         ];
         return view('admin/semua_pesanan', $data);
+    }
+
+    public function files()
+    {
+        $data = [
+            'dashboard' => '',
+            'pesanan_proses' => '',
+            'pesanan_dibayar' => '',
+            'semua_pesanan' => '',
+            'files' => 'active',
+            'games' => '',
+            'paket' => '',
+            'nominal' => '',
+            'promo' => '',
+        ];
+        return view('admin/files', $data);
+    }
+
+    public function games()
+    {
+        $data = [
+            'dashboard' => '',
+            'pesanan_proses' => '',
+            'pesanan_dibayar' => '',
+            'semua_pesanan' => '',
+            'files' => '',
+            'games' => 'active',
+            'paket' => '',
+            'nominal' => '',
+            'promo' => '',
+        ];
+        return view('admin/games', $data);
+    }
+
+    public function paket()
+    {
+        $data = [
+            'dashboard' => '',
+            'pesanan_proses' => '',
+            'pesanan_dibayar' => '',
+            'semua_pesanan' => '',
+            'files' => '',
+            'games' => '',
+            'paket' => 'active',
+            'nominal' => '',
+            'promo' => '',
+        ];
+        return view('admin/paket', $data);
+    }
+
+    public function nominal()
+    {
+        $data = [
+            'dashboard' => '',
+            'pesanan_proses' => '',
+            'pesanan_dibayar' => '',
+            'semua_pesanan' => '',
+            'files' => '',
+            'games' => '',
+            'paket' => '',
+            'nominal' => 'active',
+            'promo' => '',
+        ];
+        return view('admin/nominal', $data);
+    }
+
+    public function promo()
+    {
+        $data = [
+            'dashboard' => '',
+            'pesanan_proses' => '',
+            'pesanan_dibayar' => '',
+            'semua_pesanan' => '',
+            'files' => '',
+            'games' => '',
+            'paket' => '',
+            'nominal' => '',
+            'promo' => 'active',
+        ];
+        return view('admin/promo', $data);
     }
 
     public function data($kode = false)
@@ -103,10 +204,23 @@ class Admin extends BaseController
             }else if($kode == "getsemuapesanan"){
                 $data = $this->pesanan->orderby('updated_at', 'DESC')->findAll();
             }else if($kode == "getpesanandiproses"){
-                $data = $this->pesanan->where(['status' => 'process'])->orderby('updated_at', 'DESC')->findAll();
+                // $data = $this->pesanan->where(['status' => 'process'])->orderby('updated_at', 'DESC')->findAll();
+                $data = $this->AProcess->getAntrianProcess()->getResult();
+            }else if($kode == "getallfiles"){
+                $data = $this->files->orderby('id', 'ASC')->findAll();
+            }else if($kode == "getallgames"){
+                $data = $this->gameApiModel->orderby('urutan', 'ASC')->findAll();
+            }else if($kode == "getallpaket"){
+                $data = $this->paketApiModel->getAllPaket()->getResult();
+            }else if($kode == "getallnominal"){
+                $data = $this->harga->getAllNominal()->getResult();
+            }else if($kode == "getallpromo"){
+                $data = $this->promo->getAllPromo()->getResult();
             }
             return json_encode($data);
+            // return dd($data);
         }
     }
+
 }
 ?>
