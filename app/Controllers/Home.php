@@ -9,6 +9,7 @@ use App\Models\SemuaFilesModel;
 use App\Models\DaftarHargaModel;
 use App\Models\DaftarPembayaranModel;
 use App\Models\DaftarPesananModel;
+use App\Models\FilesModel;
 use App\Models\PromoCodeModel;
 
 class Home extends BaseController
@@ -28,7 +29,7 @@ class Home extends BaseController
         $this->paket = new DaftarPaketModel();
         $this->uaccess = new UserAccessModel();
         $this->auth = service('authentication');
-        $this->files = new SemuaFilesModel();
+        $this->files = new FilesModel();
         $this->harga = new DaftarHargaModel();
         $this->pembayaran = new DaftarPembayaranModel();
         $this->pesanan = new DaftarPesananModel();
@@ -127,8 +128,6 @@ class Home extends BaseController
             $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($secretKey) .  '&response=' . urlencode($captcha).'&remoteip='.$ip;
             $response = file_get_contents($url);
             $responseKeys = json_decode($response,true);
-            d($responseKeys);
-            dd($_POST);
 
             foreach($_POST as $a=>$b){
                 if($a != 'promocode' && $a != 'email'){

@@ -368,7 +368,7 @@ exampleModal.addEventListener('show.bs.modal', function(event) {
     }
     ?> data = data + 'nominal=' + nominal + '&paket_id=' + paket_id + '&email=' + email + '&promocode=' +
         promocode;
-    req.open('POST', 'http://localhost:8080/api/verifyorder');
+    req.open('POST', '<?= base_url('/api/verifyorder'); ?>');
     req.setRequestHeader('Content-type',
         'application/x-www-form-urlencoded');
     req.send(data);
