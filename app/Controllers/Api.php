@@ -52,7 +52,7 @@ class Api extends ResourceController
     public function getpaket(){
         $gameid = $_GET['game_id'];
         if(isset($gameid)){
-            $data = $this->paketApiModel->where(['slug_game'=>$gameid, 'status' => 'enabled'])->findAll();
+            $data = $this->paketApiModel->where(['slug_game'=>$gameid, 'status' => 'enabled'])->orderby('urutan', 'ASC')->findAll();
             if(empty($data)){
                 $array = [
                     'status' => 0

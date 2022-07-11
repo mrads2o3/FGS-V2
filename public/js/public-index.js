@@ -39,37 +39,16 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
     // Begin accessing JSON data here
     var result = JSON.parse(this.response);
     if (request.status >= 200 && request.status < 400) {
-      // data.forEach(movie => {
-      //   const card = document.createElement('div');
-      //   card.setAttribute('class', 'card');
-
-      //   const h1 = document.createElement('h1');
-      //   h1.textContent = movie.title;
-
-      //   const p = document.createElement('p');
-      //   movie.description = movie.description.substring(0, 300);
-      //   p.textContent = `${movie.description}...`;
-
-      //   container.appendChild(card);
-      //   card.appendChild(h1);
-      //   card.appendChild(p);
-      // });
-      // alert(result.data[0].nama_paket);
-      // resultdata = result.data;
 
       let text = "";
       result.data.forEach(a => {
-        // alert(a.nama_paket);
         text += '<a href="http://localhost:8080/paket/'+game_id+'/'+a.kode_paket+'" class="col-lg-3 col-4 my-1 mb-2 text-none p-1" style="text-decoration:none;"><div class="row"><div class="col-lg-10 col-12 m-auto d-block"><img src="/assets/uploaded/image/icon/'+a.ikon_paket+'" class="img-fluid img-logo"></div><div class="col-lg-10 col-12 text-center m-auto mt-2 d-block"><span class="text-black fw-bold">'+a.nama_paket+'</span></div></div>';
       });
 
       //then change to result from api
       x.innerHTML = text;
-      
+
     } else {
-      // const errorMessage = document.getElementsByClassName('nama_paket');
-      // errorMessage.textContent = `Gah, it's not working!`;
-      // app.appendChild(errorMessage);
       x.innerHTML = 'Load paket error... silakan hubungi admin';
     }
   }

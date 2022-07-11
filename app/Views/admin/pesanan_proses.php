@@ -136,8 +136,12 @@ function showTable() {
                     '<td>' + data[i].process_time + '</td>' +
                     '</tr>';
             }
-            $('#DataTablePesananProses').html(html);
-            $('#table-pesanan-proses').DataTable();
+            // $('#DataTablePesananProses').html(html);
+            // $('#table-pesanan-proses').DataTable();
+            $('#table-pesanan-proses').DataTable().destroy();
+            $('#table-pesanan-proses').find('#DataTablePesananProses').html('');
+            $('#table-pesanan-proses').find('#DataTablePesananProses').append(html);
+            $('#table-pesanan-proses').DataTable().draw();
         }
 
     });

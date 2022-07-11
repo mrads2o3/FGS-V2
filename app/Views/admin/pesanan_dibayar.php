@@ -133,8 +133,12 @@ function showTable() {
                     '<td>' + data[i].pay_at + '</td>' +
                     '</tr>';
             }
-            $('#DataTableAntrian').html(html);
-            $('#TableAntrian').DataTable();
+            // $('#DataTableAntrian').html(html);
+            // $('#TableAntrian').DataTable();
+            $('#TableAntrian').DataTable().destroy();
+            $('#TableAntrian').find('#DataTableAntrian').html('');
+            $('#TableAntrian').find('#DataTableAntrian').append(html);
+            $('#TableAntrian').DataTable().draw();
         }
 
     });

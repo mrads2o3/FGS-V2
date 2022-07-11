@@ -28,7 +28,7 @@ class DaftarPaketModel extends Model
 
     public function getAllPaket()
     {
-        $data = $this->db->table('daftar_paket')->join('daftar_game', 'daftar_paket.slug_game = daftar_game.slug')->orderby('kode_paket', 'ASC')->get();
+        $data = $this->db->table('daftar_game')->join('daftar_paket', 'daftar_paket.slug_game = daftar_game.slug')->orderby('kode_paket', 'ASC')->get();
         return $data;
     }
 }

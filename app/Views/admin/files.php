@@ -106,10 +106,11 @@ function refresh() {
 function showTable() {
     $.ajax({
         type: 'GET',
-        url: '<?php echo base_url('admin/data/getallfiles')?>',
+        url: '<?= base_url('admin/data/getallfiles')?>',
         async: true,
         dataType: 'json',
         success: function(data) {
+            $('#DataTableFiles').html('');
             var html = '';
             var i;
             for (i = 0; i < data.length; i++) {
@@ -137,8 +138,12 @@ function showTable() {
                     '" onclick="hapusData(' + data[i].id + ')"> Hapus </button></td>' +
                     '</tr>';
             }
-            $('#DataTableFiles').html(html);
-            $('#table_files').DataTable();
+            //$('#DataTableFiles').html(html);
+            // $('#table_files').DataTable().ajax.reload();
+            $('#table_files').DataTable().destroy();
+            $('#table_files').find('#DataTableFiles').html('');
+            $('#table_files').find('#DataTableFiles').append(html);
+            $('#table_files').DataTable().draw();
         }
     });
 }

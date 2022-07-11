@@ -119,8 +119,12 @@ function showTable() {
                     '<td> <p class="badge ' + badge_color + ' text-white">' + data[i].status + '</p></td>' +
                     '</tr>';
             }
-            $('#DataTableSemuaPesanan').html(html);
-            $('#table-pesanan').DataTable();
+            // $('#DataTableSemuaPesanan').html(html);
+            // $('#table-pesanan').DataTable();
+            $('#table-pesanan').DataTable().destroy();
+            $('#table-pesanan').find('#DataTableSemuaPesanan').html('');
+            $('#table-pesanan').find('#DataTableSemuaPesanan').append(html);
+            $('#table-pesanan').DataTable().draw();
         }
 
     });
