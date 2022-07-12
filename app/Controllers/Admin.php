@@ -200,6 +200,7 @@ class Admin extends BaseController
 
     public function promo()
     {
+        $allPaket = $this->paketApiModel->getAllPaket()->getResult();
         $data = [
             'dashboard' => '',
             'pesanan_proses' => '',
@@ -210,6 +211,7 @@ class Admin extends BaseController
             'paket' => '',
             'nominal' => '',
             'promo' => 'active',
+            'inPaket'=> $allPaket,
         ];
         return view('admin/promo', $data);
     }
@@ -243,8 +245,10 @@ class Admin extends BaseController
                 $data = $this->gameApiModel->where('kode_game', $_GET['id'])->first();
             }else if($kode == "getdetailpaket" && isset($_GET['id'])){
                 $data = $this->paketApiModel->where(['kode_paket'=> $_GET['id']])->first();
-            }else if($kode = "getdetailharga"){
+            }else if($kode == "getdetailnominal"){
                 $data = $this->harga->where(['kode_harga'=>$_GET['id']])->first();
+            }else if($kode == "getdetailpromo"){
+                $data = $this->promo->where('id', $_GET['id'])->first();
             }
             return json_encode($data);
         }
@@ -515,7 +519,15 @@ class Admin extends BaseController
                                     $urutan = $var['urutan'];
                                     $loop = true;
                                     $var_kodegame = $kode_game;
-                                    $query = $this->gameApiModel->set(['urutan'=> $urutan, 'kode_game'=> $kode_game, 'nama_game'=> $var['nama_game'], 'slug'=> $slug, 'ikon_matauang'=> $var['ikon_matauang'], 'ikon_game'=> $var['ikon_game'], 'cari_id'=> $var['cari_id'], 'status'=>$var['status']])->where(['kode_game'=>$var['old_kode_game']])->update();
+                                    $query = $this->gameApiModel->set([
+                                        'urutan'=> $urutan, 
+                                        'kode_game'=> $kode_game, 
+                                        'nama_game'=> $var['nama_game'], 
+                                        'slug'=> $slug, 
+                                        'ikon_matauang'=> $var['ikon_matauang'], 
+                                        'ikon_game'=> $var['ikon_game'], 
+                                        'cari_id'=> $var['cari_id'], 
+                                        'status'=>$var['status']])->where(['kode_game'=>$var['old_kode_game']])->update();
                                     
                                     while($loop){
                                         $qwerty = $this->gameApiModel->where(['urutan'=> $urutan, 'kode_game!='=>$var_kodegame])->orderby('updated_at', 'ASC')->first();
@@ -740,7 +752,7 @@ class Admin extends BaseController
         return json_encode($data);
     }
 
-    public function nominalprocess()
+    public function nominalProcess()
     {
         $msg = 'Nothing todo here!';
 
@@ -822,20 +834,18 @@ class Admin extends BaseController
                     if($var['template'] == 'divider'){
                         if($var['urutan'] && $var['nominal'] && $var['ukuran'] && $var['kode_paket']){
                             
-                            $msg = 'Oke pertama';
-
-                            $query = $this->harga->insert([
+                            $query = $this->harga->set([
                                 'urutan'=>$var['urutan'],
                                 'nominal'=>$var['nominal'],
                                 'kode_paket'=>$var['kode_paket'],
                                 'template'=>$var['template'],
                                 'ukuran'=>$var['ukuran'],
-                            ]);
+                            ])->where(['kode_harga'=>$var['kode_harga']])->update();
                             
                             if($query){
                                 $msg = 'Berhasil';
                             }else{
-                                $msg = 'Input data gagal';
+                                $msg = 'Update data gagal';
                             }
                             
                         }else{
@@ -845,9 +855,7 @@ class Admin extends BaseController
                     }else{
                         if($var['urutan'] && $var['nominal'] && $var['harga_basic'] && $var['ukuran'] && $var['kode_paket'] && $var['template']){
                             
-                            $msg = 'Oke kedua'.$var['harga_promo'].$var['harga_basic'];
-
-                            $query = $this->harga->insert([
+                            $query = $this->harga->set([
                                 'urutan'=>$var['urutan'],
                                 'nominal'=>$var['nominal'],
                                 'harga_promo'=>$var['harga_promo'],
@@ -856,12 +864,12 @@ class Admin extends BaseController
                                 'kode_paket'=>$var['kode_paket'],
                                 'template'=>$var['template'],
                                 'c_matauang'=>$var['c_matauang'],
-                            ]);
+                            ])->where(['kode_harga'=>$var['kode_harga']])->update();
                             
                             if($query){
                                 $msg = 'Berhasil';
                             }else{
-                                $msg = 'Input data gagal';
+                                $msg = 'Update data gagal';
                             }
 
                         }else{
@@ -869,10 +877,10 @@ class Admin extends BaseController
                         }
                     }
 
-                    if($msg == 'Berhasil' && $query){
+                    if($msg == 'Berhasil' && $checking){
                         $loop = true;
                         $urutan = $var['urutan'];
-                        $var_kodeharga = $query;
+                        $var_kodeharga = $var['kode_harga'];
                         while($loop){
                             $qwerty = $this->harga->where(['urutan'=>$urutan, 'kode_harga!='=>$var_kodeharga, 'kode_paket'=>$var['kode_paket']])->orderby('kode_harga', 'ASC')->first();
                             if($qwerty != NULL){
@@ -906,6 +914,87 @@ class Admin extends BaseController
             'message' => $msg,
         );
         return json_encode($data);
+    }
+
+    public function promoProcess()
+    {
+        $msg = 'Nothing todo here!';
+
+        if($_POST){
+            $var = $_POST;
+
+            if($var['formtype'] == 'insert'){
+                // $msg = str_replace(",", ".", $var['disc']);
+                if($var['code'] && $var['disc'] && isset($var['max']) && isset($var['min']) && $var['expired'] && $var['paket']){
+                    $query = $this->promo->where(['code'=>$var['code']])->first();
+                    if($query == NULL){
+                        $disc = str_replace(",", ".", $var['disc']);
+                        $query = $this->promo->insert([
+                            'code' => $var['code'],
+                            'disc' => $disc ,
+                            'max' => $var['max'],
+                            'min' => $var['min'],
+                            'expired' => $var['expired'],
+                            'paket' => $var['paket'],
+                        ]);
+
+                        if($query){
+                            $msg = 'Berhasil';
+                        }else{
+                            $msg = 'Input data gagal!';
+                        }
+                    
+                    }else{
+                        $msg = 'Kode promo '.$var['code'].' sudah ada didalam database!';
+                    }
+                }else{
+                    $msg = 'Isi semua field!';
+                }
+            }else if($var['formtype'] == 'update'){
+                if($var['id_promo'] && $var['code'] && $var['disc'] && isset($var['max']) && isset($var['min']) && $var['expired'] && $var['paket']){
+                    $query = $this->promo->where(['id'=>$var['id_promo']])->first();
+                    if($query != NULL){
+
+                        $disc = str_replace(",", ".", $var['disc']);
+                        $query = $this->promo->set([
+                            'code' => $var['code'],
+                            'disc' => $disc ,
+                            'max' => $var['max'],
+                            'min' => $var['min'],
+                            'expired' => $var['expired'],
+                            'paket' => $var['paket'],
+                        ])->where(['id'=>$var['id_promo']])->update();
+                        
+                        if($query){
+                            $msg = 'Berhasil';
+                        }else{
+                            $msg = 'Gagal update data!';
+                        }
+
+                    }else{
+                        $msg = 'Data dengan id '.$var['id_promo'].' tidak ditemukan!';
+                    }
+                }else{
+                    $msg = 'Isi semua field!';  
+                }
+            }else{
+                $msg = 'Missing value!';
+            }
+
+        }else if(isset($_GET['del_id'])){
+            $query = $this->promo->delete(['id'=>$_GET['del_id']]);
+            if($query){
+                $msg = 'Data berhasil dihapus!';
+            }else{
+                $msg = 'Data gagal dihapus';
+            }
+        }
+
+        $data = array(
+            'message' => $msg,
+        );
+        return json_encode($data);
+
     }
 }
 ?>

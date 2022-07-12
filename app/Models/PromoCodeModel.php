@@ -9,7 +9,7 @@ class PromoCodeModel extends Model
     protected $table = 'promo_code';
     protected $primaryKey = 'id';
     protected $useTimestamps = false;
-    protected $allowedFields = ['code', 'paket', 'dic', 'min', 'max', 'limited', 'sisa_limited', 'expired'];
+    protected $allowedFields = ['code', 'paket', 'disc', 'min', 'max', 'limited', 'sisa_limited', 'expired'];
     
     public function getPromo($code = false)
     {

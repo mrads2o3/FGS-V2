@@ -20,7 +20,7 @@ class DaftarHargaModel extends Model
         }else if($kode_paket == false){
             return $this->orderBy('urutan', 'ASC')->findAll();
         }else{
-            return $this->where(['kode_paket'=>$kode_paket])->findAll();
+            return $this->where(['kode_paket'=>$kode_paket])->orderby('urutan', 'ASC')->findAll();
         }
     }
 

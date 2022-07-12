@@ -166,42 +166,27 @@ function modalEdit(id = false) {
     if (id) {
         $.ajax({
             type: 'GET',
-            url: '<?php echo base_url('admin/data/getdetailpaket')?>?id=' + id,
+            url: '<?php echo base_url('admin/data/getdetailnominal')?>?id=' + id,
             async: true,
             dataType: 'json',
             success: function(data) {
-                $('#OrderIDModalPaket').html('Edit ' + data.nama_paket);
+                $('#OrderIDModalNominal').html('Edit ' + data.kode_harga);
                 $('#formType').val('update');
 
                 // $('#inUrutan').val(data.urutan);
                 // $('#status').val(data.status).change();
 
-                $('#id_paket').val(data.kode_paket);
-                $("#slug_game").val(data.slug_game).change();
-                $("#urutan").val(data.urutan);
-                $("#nama_paket").val(data.nama_paket);
-                $("#deskripsi_paket").val(br2nl(data.deskripsi_paket, '\n'));
-                $("#banner_paket").val(data.banner_paket).change();
-                $("#ikon_paket").val(data.ikon_paket).change();
-                $("#game-id").val(data['game-id']).change();
-                $("#game-id_type").val(data['game-id_type']).change();
-                $("#game-id_placeholder").val(data['game-id_placeholder']);
-                $("#game-server").val(data['game-server']).change();
-                $("#game-server_type").val(data['game-server_type']).change();
-                $("#game-server_select-value").val(data['game-server_select-value']);
-                $("#game-server_placeholder").val(data['game-server_placeholder']);
-                $("#game-note").val(data.note).change();
-                $("#game-note_placeholder").val(data.note_placeholder);
-                $("#game-nickname").val(data['game-nickname']).change();
-                $("#game-nickname_placeholder").val(data['game-nickname_placeholder']);
-                $("#sub1").val(data.sub1);
-                $("#sub2").val(data.sub2);
-                $("#sub3").val(data.sub3);
-                $("#petunjuk").val(data.petunjuk).change();
-                $("#status").val(data.status).change();
+                $('#kode_harga').val(data.kode_harga);
+                $('#urutan').val(data.urutan);
+                $('#nominal').val(data.nominal);
+                $('#harga_promo').val(data.harga_promo);
+                $('#harga_basic').val(data.harga_basic);
+                $("#ukuran").val(data.ukuran).change();;
+                $("#kode_paket").val(data.kode_paket).change();;
+                $("#template").val(data.template).change();;
+                $("#c_matauang").val(data.c_matauang).change();;
 
-
-                $("#ModalPaket").modal();
+                $("#ModalNominal").modal();
             }
 
         });
