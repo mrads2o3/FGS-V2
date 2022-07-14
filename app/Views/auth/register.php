@@ -1,6 +1,7 @@
 <?= $this->extend('auth/templates/index'); ?>
 
 <?= $this->section('content'); ?>
+<title>Register - FastGamingStore</title>
 <div class="container">
 
     <div class="row justify-content-center">

@@ -1,6 +1,7 @@
 <?= $this->extend('auth/templates/index'); ?>
 
 <?= $this->section('content'); ?>
+<title>Login - FastGamingStore</title>
 <div class="container">
 
     <!-- Icon Row -->

@@ -60,6 +60,7 @@ $routes->post('/api/cutomizeprocessorder', 'Api::CutomizeProcessOrder', ['filter
 $routes->get('/member', 'Member::index', ['filter' => 'role:user']);
 $routes->get('/member/index', 'Member::index', ['filter' => 'role:user']);
 $routes->get('/member/transaction_history', 'Member::historytx');
+$routes->get('/member/profile', 'Member::Profile');
 
 // Public
 $routes->get('/paket/(:any)/(:any)', 'Home::games_paket/$1/$2');

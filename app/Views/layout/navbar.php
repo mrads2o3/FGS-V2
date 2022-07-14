@@ -68,7 +68,19 @@
                             </a>
                         </h2>
                     </div>
-                    <?php } ?>
+                    <?php }else if ($roles == 'user'){
+                        ?>
+                    <div class="accordion-menu">
+                        <h2 class="accordion-header" id="headingOne">
+                            <a href="<?= base_url('/member/profile'); ?>">
+                                <button class="accordion-menu-button collapsed px-3" type="button">
+                                    <i class="fas fa-key mx-3"></i> Ubah Password
+                                </button>
+                            </a>
+                        </h2>
+                    </div>
+                    <?php
+                    } ?>
                     <div class="accordion-menu">
                         <h2 class="accordion-header" id="headingOne">
                             <a href="<?= base_url('/member/transaction_history'); ?>">
