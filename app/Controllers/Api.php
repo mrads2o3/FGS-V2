@@ -147,14 +147,14 @@ class Api extends ResourceController
             if(!is_email_valid($_POST['email'])){
                 return '
                 <div class="alert alert-danger text-center" role="alert">
-                    <b>Masukan email yang benar atau kosongkan saja.</b>
+                    <b>Masukan email yang benar.</b>
                 </div>';
             }
         }
             if(isset($_POST)){
                 // Cek input atau post
                 foreach($_POST as $a=>$b){
-                    if($a != 'promocode' && $a != 'email'){
+                    if($a != 'promocode'){
                         if($b=='' || empty($b) || $b== NULL || $b == 'undefined'){
                             return '
                             <div class="alert alert-danger text-center" role="alert">

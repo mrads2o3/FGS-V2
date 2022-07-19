@@ -19,6 +19,9 @@
             <input type="password" class="form-control w-100" name="rep_new_password" id="rep_new_password" required>
         </div>
         <button class="btn bg-sec-fastgaming text-white w-100" id="saveButton">Simpan perubahan</button>
+        <a href="<?= base_url(); ?>">
+            <button class="btn bg-fastgaming text-white w-100 mt-2">Kembali Ke Halaman Utama</button>
+        </a>
     </div>
 </div>
 <script>

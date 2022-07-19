@@ -193,12 +193,10 @@
                             Promo!
                         </span>
                         <?php } ?>
-                        <input class="btn-check" type="radio" name="nominal"
-                            id="harga-<?= $a['nominal'].'-'.$a['harga_basic'].'-'.$a['harga_promo']; ?>"
+                        <input class="btn-check" type="radio" name="nominal" id="harga-<?= $a['nominal'];?>"
                             value="<?= $a['kode_harga']; ?>" required="">
 
-                        <label class="btn btn-outline-primary w-100"
-                            for="harga-<?= $a['nominal'].'-'.$a['harga_basic'].'-'.$a['harga_promo']; ?>">
+                        <label class="btn btn-outline-primary w-100 h-100 mx-auto" for="harga-<?= $a['nominal'];?>">
                             <div class="d-flex">
                                 <?php
                                     if($a['c_matauang']){
@@ -208,21 +206,68 @@
                                     }
                                     if($a['template'] == 'curency-text'){
                             ?>
-                                <div style="padding-top:0px;"><img src="<?= $img; ?>" style="height:20px;width:20px;">
+                                <div style="padding-top:0px;" class="my-auto"><img src="<?= $img; ?>"
+                                        style="height:30px;width:30px;">
                                 </div>
-                                <div class="ml-auto txt-black mx-2" id="harga-nominal"><?= $a['nominal']; ?>
+                                <div class="ml-auto txt-black mx-auto" id="harga-nominal">
+                                    <b>
+                                        <?= $a['nominal']; ?>
+                                    </b>
+                                    <br>
+                                    <small>
+                                        <i>
+                                            <?php 
+                                                if($a['harga_promo'] != 0){
+                                                    echo '<s>Rp. '.number_format($a['harga_promo'],0,',','.').'</s> Rp.'.number_format($a['harga_basic'], 0, ',', '.');
+                                                }else{
+                                                    echo 'Rp. '.number_format($a['harga_basic'], 0, ',', '.');
+                                                } 
+                                            ?>
+                                        </i>
+                                    </small>
                                 </div>
                                 <?php
                                     }else if($a['template'] == 'text-curency'){
                             ?>
-                                <div class="ml-auto txt-black mx-2" id="harga-nominal"><?= $a['nominal']; ?>
+                                <div class="ml-auto txt-black w-100" id="harga-nominal">
+                                    <b>
+                                        <?= $a['nominal']; ?>
+                                    </b>
+                                    <br>
+                                    <small>
+                                        <i>
+                                            <?php 
+                                                if($a['harga_promo'] != 0){
+                                                    echo '<s>Rp. '.number_format($a['harga_promo'],0,',','.').'</s> Rp.'.number_format($a['harga_basic'], 0, ',', '.');
+                                                }else{
+                                                    echo 'Rp. '.number_format($a['harga_basic'], 0, ',', '.');
+                                                } 
+                                            ?>
+                                        </i>
+                                    </small>
                                 </div>
-                                <div style="padding-top:0px;"><img src="<?= $img; ?>" style="height:20px;width:20px;">
+                                <div style="padding-top:0px;" class="my-auto"><img src="<?= $img; ?>"
+                                        style="height:30px;width:30px;">
                                 </div>
                                 <?php    
                                     }else if($a['template'] == 'text'){
                             ?>
-                                <div class="ml-auto txt-black mx-2" id="harga-nominal"><?= $a['nominal']; ?>
+                                <div class="ml-auto txt-black w-100" id="harga-nominal">
+                                    <b>
+                                        <?= $a['nominal']; ?>
+                                    </b>
+                                    <br>
+                                    <small>
+                                        <i>
+                                            <?php 
+                                                if($a['harga_promo'] != 0){
+                                                    echo '<s>Rp. '.number_format($a['harga_promo'],0,',','.').'</s> Rp.'.number_format($a['harga_basic'], 0, ',', '.');
+                                                }else{
+                                                    echo 'Rp. '.number_format($a['harga_basic'], 0, ',', '.');
+                                                } 
+                                            ?>
+                                        </i>
+                                    </small>
                                 </div>
                                 <?php
                                     }
@@ -238,7 +283,7 @@
             </div>
             <div class="card card-body px-2 pt-4 pb-2 mb-5" style="border-radius: 0px 0px 30px 30px;">
                 <h4 class="text-center">
-                    <b>E-Mail (Opsional)</b>
+                    <b>E-Mail</b>
                 </h4>
 
                 <div class="form-floating mb-3">
@@ -246,15 +291,16 @@
                     <label for="floatingInput">E-Mail</label>
                 </div>
 
+                <?php $id_id = $id_id.'-email';?>
+
                 <div class="row mx-1">
-                    <hr>
+                    <!-- <hr>
                     <h4 class="mb-0">Harga : <br>
                         <s><small id="harga_awal"></small></s> <b id="harga-total"></b>
                     </h4>
 
                     <small class="text-muted mb-2">(Harga diatas belum termasuk fee)</small>
-                    <hr>
-                    <b class="text-red text-center">PASTIKAN DATA YANG DI INPUT ADALAH BENAR!</b>
+                    <hr> -->
 
                     <center>
                         <div class="g-recaptcha" id="recaptcha" data-sitekey="6LeUpqkfAAAAAFVeVGcUssiZPy8TbFPTdWqU1gWq"
@@ -264,10 +310,11 @@
                         <?php //$id_id = "-recaptcha" ?>
                     </center>
 
-                    <button class="btn bg-sec-fastgaming text-white w-100 mt-3 mb-3" type="button"
-                        data-bs-toggle="modal" data-bs-target="#modalPesan"
-                        data-bs-whatever="<?= $paket[0]['kode_paket'] ?>" id="beli" value="beli"><i
-                            class="fas fa-cart-arrow-down mx-1"></i>BELI</button>
+                    <b class="text-red text-center mt-2">PASTIKAN DATA YANG DI INPUT ADALAH BENAR!</b>
+
+                    <button class="btn bg-sec-fastgaming text-white w-100 mb-3" type="button" data-bs-toggle="modal"
+                        data-bs-target="#modalPesan" data-bs-whatever="<?= $paket[0]['kode_paket'] ?>" id="beli"
+                        value="beli"><i class="fas fa-cart-arrow-down mx-1"></i>BELI</button>
                 </div>
             </div>
 
@@ -291,26 +338,26 @@
     </div>
 </div>
 <script>
-const radioButtons = document.querySelectorAll('input[name="nominal"]');
-for (const radioButton of radioButtons) {
-    radioButton.addEventListener('change', changePrice);
-}
+// const radioButtons = document.querySelectorAll('input[name="nominal"]');
+// for (const radioButton of radioButtons) {
+//     radioButton.addEventListener('change', changePrice);
+// }
 
-function changePrice(e) {
+// function changePrice(e) {
 
-    if (this.checked) {
-        harga = this.id.split("-");
-        finalharga = harga[2].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
-        if (harga[3] > 0) {
-            document.getElementById('harga_awal').innerHTML =
-                `Rp${harga[3].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")}`;
-        } else {
-            document.getElementById('harga_awal').innerHTML = '';
-        }
-        document.getElementById('harga-total').innerText = `Rp${finalharga}`;
-    }
+//     if (this.checked) {
+//         harga = this.id.split("-");
+//         finalharga = harga[2].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+//         if (harga[3] > 0) {
+//             document.getElementById('harga_awal').innerHTML =
+//                 `Rp${harga[3].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")}`;
+//         } else {
+//             document.getElementById('harga_awal').innerHTML = '';
+//         }
+//         document.getElementById('harga-total').innerText = `Rp${finalharga}`;
+//     }
 
-}
+// }
 
 <?php 
 $id_id = explode("-", $id_id); 

@@ -46,9 +46,9 @@ if(session()->getFlashdata('message') !== NULL){
 
 <div class="card shadow card-body mt-4">
     <h1 class="h3 mb-4 text-center text-gray-800">All Files</h1>
-    <form action="">
+    <!-- <form action="">
         <button type="button" class="btn btn-success" onclick="refresh()">Bersihkan Data</button>
-    </form>
+    </form> -->
     <br>
     <div class="table-responsive">
         <table class="table table-bordered text-center" id="table_files" width="100%" cellspacing="0">
