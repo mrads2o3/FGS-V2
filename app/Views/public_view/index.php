@@ -147,18 +147,6 @@ exampleModal.addEventListener('show.bs.modal', function(event) {
     x.innerHTML =
         '<center><img src="assets/core/image/loading.gif" alt="" style="width:auto;height:100px;"></center>';
 
-    // Test API code
-    // const app = document.getElementById('root');
-
-    // const logo = document.createElement('img');
-    // logo.src = 'logo.png';
-
-    // const container = document.createElement('div');
-    // container.setAttribute('class', 'container');
-
-    // app.appendChild(logo);
-    // app.appendChild(container);
-
     var request = new XMLHttpRequest();
     request.open('GET', '<?= base_url('api/getpaket?game_id='); ?>' + game_id, true);
     request.onload = function() {
@@ -184,13 +172,7 @@ exampleModal.addEventListener('show.bs.modal', function(event) {
     }
     request.send();
 
-    // Gatau bentar
     var req = new XMLHttpRequest();
-    // req.onreadystatechange = function(){
-    //   if (this.readyState == 4 && this.status == 200) {
-    //     document.getElementById("demo").innerHTML = this.responseText;
-    //   }
-    // }
     req.open('POST', '<?= base_url('api/recordAct'); ?>');
     req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     req.send('game_id=' + game_id + '&paket_id=' + paket_id);

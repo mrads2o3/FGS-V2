@@ -294,13 +294,6 @@
                 <?php $id_id = $id_id.'-email';?>
 
                 <div class="row mx-1">
-                    <!-- <hr>
-                    <h4 class="mb-0">Harga : <br>
-                        <s><small id="harga_awal"></small></s> <b id="harga-total"></b>
-                    </h4>
-
-                    <small class="text-muted mb-2">(Harga diatas belum termasuk fee)</small>
-                    <hr> -->
 
                     <center>
                         <div class="g-recaptcha" id="recaptcha" data-sitekey="6LeUpqkfAAAAAFVeVGcUssiZPy8TbFPTdWqU1gWq"
@@ -338,27 +331,6 @@
     </div>
 </div>
 <script>
-// const radioButtons = document.querySelectorAll('input[name="nominal"]');
-// for (const radioButton of radioButtons) {
-//     radioButton.addEventListener('change', changePrice);
-// }
-
-// function changePrice(e) {
-
-//     if (this.checked) {
-//         harga = this.id.split("-");
-//         finalharga = harga[2].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
-//         if (harga[3] > 0) {
-//             document.getElementById('harga_awal').innerHTML =
-//                 `Rp${harga[3].toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")}`;
-//         } else {
-//             document.getElementById('harga_awal').innerHTML = '';
-//         }
-//         document.getElementById('harga-total').innerText = `Rp${finalharga}`;
-//     }
-
-// }
-
 <?php 
 $id_id = explode("-", $id_id); 
 echo 'document.getElementById("beli").onclick = function() {';

@@ -337,23 +337,25 @@ class Api extends ResourceController
                 </div>
                 ';
 
-                if(isset($_POST['server'])){
-                    $user_id = $_POST['user_id'].' ('.$_POST['server'].')';
-                }else{
-                    $user_id = $_POST['user_id'];
+                if(isset($_POST['user_id'])){
+                    if(isset($_POST['server'])){
+                        $user_id = $_POST['user_id'].' ('.$_POST['server'].')';
+                    }else{
+                        $user_id = $_POST['user_id'];
+                    }
+
+                    echo '
+                    <div class="row m-3">
+                        <div class="col-5">
+                            User ID
+                        </div>
+                        <div class="col-7">
+                            : '.$user_id.'
+                        </div>
+                    </div>
+                    ';
                 }
-
-                echo '
-                <div class="row m-3">
-                    <div class="col-5">
-                        User ID
-                    </div>
-                    <div class="col-7">
-                        : '.$user_id.'
-                    </div>
-                </div>
-                ';
-
+                
                 if(isset($nickname)){
                     echo '
                     <div class="row m-3">
