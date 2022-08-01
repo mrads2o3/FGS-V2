@@ -262,13 +262,15 @@ class Home extends BaseController
                     <b>Harga Error!</b>
                 </div>';
             }
-
-            if(isset($_POST['server'])){
-                $user_id = $_POST['user_id'].' ('.$_POST['server'].')';
+            if(isset($_POST['user_id'])){
+                if(isset($_POST['server'])){
+                    $user_id = $_POST['user_id'].' ('.$_POST['server'].')';
+                }else{
+                    $user_id = $_POST['user_id'];
+                }
             }else{
-                $user_id = $_POST['user_id'];
+                $user_id = '';
             }
-
             if(isset($_POST['note'])){
                 $note = $_POST['note'];
             }else{

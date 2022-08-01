@@ -115,7 +115,7 @@ function showTable() {
                     data[i].order_id + '">Detail</a></td>' +
                     '<td>' + data[i].order_id + '</td>' +
                     '<td>' + data[i].paket + '</td>' +
-                    '<td>' + data[i].total_harga + '</td>' +
+                    '<td>' + data[i].nominal + '</td>' +
                     '<td> <p class="badge ' + badge_color + ' text-white">' + data[i].status + '</p></td>' +
                     '</tr>';
             }
