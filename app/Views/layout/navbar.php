@@ -38,7 +38,7 @@
                     <?php }else{ ?>
                     <div class="row">
                         <div class="col my-4">
-                            <?php $roles = user()->getRoles()[0]['name'] ?>
+                            <?php $roles = user()->getRoles()[1] ?>
                             Hallo, <b><?= user()->username.' ('.$roles.')'; ?></b>
                         </div>
                     </div>

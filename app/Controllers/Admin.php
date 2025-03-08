@@ -256,7 +256,7 @@ class Admin extends BaseController
 
     public function uploadFiles()
     {
-        if(user()->getRoles()[0]['name'] == "admin"){
+        if(user()->getRoles()[1] == "admin"){
             if(isset($_POST["submit"])){
 
                 $type = $_POST['type'];
@@ -355,7 +355,7 @@ class Admin extends BaseController
 
     public function deleteFiles()
     {
-        if(user()->getRoles()[0]['name'] == "admin"){
+        if(user()->getRoles()[1] == "admin"){
             if(isset($_POST)){
                 $query = $this->files->where('id', $_POST['kode'])->first();
                 $type = $query['tipe_files'];
@@ -435,7 +435,7 @@ class Admin extends BaseController
                 return json_encode($data);
             }
             
-            if(user()->getRoles()[0]['name'] == "admin"){
+            if(user()->getRoles()[1] == "admin"){
                     if($var['formtype'] == 'insert'){
                         $slug = strtolower(str_replace(" ", "_",$var['nama_game']));
                         $query = $this->gameApiModel->where(['kode_game'=> $var['kode_game']])->first();
